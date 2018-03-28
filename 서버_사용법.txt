@@ -1,0 +1,51 @@
+[ XenServer 사용법 ]
+
+1. "0.학습내용" 에서
+    GSC Bigdata XenDap 1.0(가상화 사용자메뉴얼).pdf 일독 추천
+
+2. XenServer-7.2.0-XenCenterSetup.exe.zip 다운로드
+   압축 해제 후 설치
+
+3. 사용 방법 실습
+   글은 생략, 실습에 집중해주세요^^
+
+4. 네트위크 설정법 (Ubuntu 기준)
+   : # 은 주석
+     $ 는 터미널 프롬프트
+
+$ sudo vi /etc/network/interfaces
+# DHCP 로 자동 설정할 경우, 그냥 자동이 편한 듯^^
+auto eth0
+iface eth0 inet dhcp
+
+# 고정 IP로 지정할 때
+#auto eth0
+#iface eth0 inet static
+#address 10.1.43.XXX
+#netmask 255.255.240.0
+#gateway 10.1.40.1
+
+dns-nameservers 8.8.8.8
+
+# 네트워크 정보 확인
+$ ifconfig
+
+# 네트워크 및 DNS 체크
+$ ping google.com
+
+
+
+// ---- start
+$ sudo apt-get update && sudo apt-get install openssh-server
+$ sudo netstat -ntl
+
+putty 로 접속 : 실습
+
+# Ubuntu에서 아나콘다 다운로드
+$ curl -O https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh
+# 아나콘다 설치
+$ bash Anaconda3-4.2.0-Linux-x86_64.sh
+
+$ jupyter notebook --ip=0.0.0.0
+
+source .bashrc <--- path 설정
