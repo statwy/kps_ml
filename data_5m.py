@@ -109,6 +109,7 @@ Data['day']=pd.DataFrame(pd.Series(Data['5min_0']).dt.round('D'))
 Data_final=pd.merge(Data, Ex_Data, left_on='day', right_on='day')
 Data_final['Adj_U_price']=pd.to_numeric(Data_final['U_price'])*pd.to_numeric(Data_final['Ex_rate'])
 
+Data_final['premium']=((Data_final['K_price']-Data_final['Adj_U_price'])/Data_final['Adj_U_price'])*100
 
 # 환율차트
 #plt.plot(Data_final['day'],Data_final['Ex_rate'])
