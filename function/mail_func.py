@@ -25,23 +25,79 @@ def premiumFunc(a,b) :
 
 
 # Specifying the from and to addresses
-def mail(x):
-    fromaddr = 'koreanpremium@gmail.com'
-    toaddrs  = 'jwy627@naver.com'
 
-# Writing the message (this message will appear in the email)
-
-    msg =x
-
-# Gmail Login
-
+def mail(x,y):
     username = 'koreanpremium' #without @gmail.com only write Google Id.
     password = 'koreanadmin'
-
-# Sending the mail
-
+    fromaddr = 'koreanpremium@gmail.com'
+    msg =x
+    
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()
     server.login(username,password)
+    
+    for i in y :
+        toaddrs  = i
+
+# Writing the message (this message will appear in the email)
+
+    
+
+# Gmail Login
+
+
+
+# Sending the mail
+
+
     server.sendmail(fromaddr, toaddrs, msg)
     server.quit()
+
+
+
+
+
+#def mail(x, toaddrs):
+#    fromaddr = 'koreanpremium@gmail.com'
+#
+## Writing the message (this message will appear in the email)
+#
+#    msg =x
+#
+## Gmail Login
+#
+#    username = 'koreanpremium' #without @gmail.com only write Google Id.
+#    password = 'koreanadmin'
+#
+## Sending the mail
+#
+#    server = smtplib.SMTP('smtp.gmail.com:587')
+#    server.starttls()
+#    server.login(username,password)
+#    set(map(lambda to:server.sendmail(fromaddr,to,msg),toaddrs))
+#    server.quit()
+
+
+#Data_K['5min_0']=pd.DataFrame(list(map(lambda x:time_generation(x,0),Data_K['time'])))
+    
+    
+#def mail(x):
+#    fromaddr = 'koreanpremium@gmail.com'
+#    toaddrs  = 'jwy627@naver.com'
+#
+## Writing the message (this message will appear in the email)
+#
+#    msg =x
+#
+## Gmail Login
+#
+#    username = 'koreanpremium' #without @gmail.com only write Google Id.
+#    password = 'koreanadmin'
+#
+## Sending the mail
+#
+#    server = smtplib.SMTP('smtp.gmail.com:587')
+#    server.starttls()
+#    server.login(username,password)
+#    server.sendmail(fromaddr, toaddrs, msg)
+#    server.quit()

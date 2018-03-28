@@ -194,7 +194,8 @@ plt.plot(missing_data)
 
 
 # data 탐색용 코드 
-missing_data.loc['2014-01-08':'2014-03-15']
+temp=missing_data.loc['2014-01-08':'2014-03-15']
+plt.plot(temp['5min'])
 Data_explor.loc['2017-04-08']
 Data_final_explor.loc['2017-07-08']
 
