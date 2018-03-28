@@ -109,6 +109,7 @@ Data['day']=pd.DataFrame(pd.Series(Data['5min_0']).dt.round('D'))
 Data_final=pd.merge(Data, Ex_Data, left_on='day', right_on='day')
 Data_final['Adj_U_price']=pd.to_numeric(Data_final['U_price'])*pd.to_numeric(Data_final['Ex_rate'])
 
+
 # 환율차트
 #plt.plot(Data_final['day'],Data_final['Ex_rate'])
 
@@ -121,7 +122,6 @@ Data_final['Adj_U_price']=pd.to_numeric(Data_final['U_price'])*pd.to_numeric(Dat
 
 #코프 차트
 #plt.plot(Data_final['day'],Data_final['premium'])
-
 
 #####################################################################################
 
@@ -142,12 +142,17 @@ Data_final.corr()
 # corr 결과 가격과 프리미엄간의 양의 상관관계가 돋보임. 특히 환율과 음의 상관관계가 있는것도 재밌음.
 
 
-Data_final['premium']=((Data_final['K_price']-Data_final['Adj_U_price'])/Data_final['Adj_U_price'])*100
+# missing value 분석 : 17.05 월 부터 missing value 거의 없음 
 temp_5min={}
-temp_5min['5min']=pd.date_range('2014-01-07 19:08:00','2018-03-13 23:05:00',freq='5min')
+temp_5min['5min']=pd.date_range('2014-01-07 18:20:00','2018-03-13 23:05:00',freq='5min')
 temp_5min=pd.DataFrame(temp_5min)
-Data_temp=pd.merge(Data_final, temp_5min, left_on='time', right_on='5min',how='right')
-Data_temp=Data_temp.sort_values(by=['5min'])
+Data_temp=pd.merge(Data_final, temp_5min, left_on='5min_0', right_on='5min',how='right')
+missing_data=Data_temp.loc[164068:]
+missing_data=missing_data[['5min','premium']]
+missing_data['day']=pd.DataFrame(pd.Series(missing_data['5min']).dt.round('D'))
+missing_data=missing_data.groupby('day').count()
+del missing_data['premium']
+plt.plot(missing_data)
 
 
 
