@@ -40,8 +40,12 @@ U_Data['date']=pd.Series(U_Data['date']).dt.ceil('min')
 
 Adjusted_K_Price=K_Data[1].groupby(K_Data['date']).mean()
 Adjusted_K_Volume=K_Data[2].groupby(K_Data['date']).sum()
+Adjusted_K_Count=K_Data[2].groupby(K_Data['date']).count()
+
 Adjusted_U_Price=U_Data[1].groupby(U_Data['date']).mean()
 Adjusted_U_Volume=U_Data[2].groupby(U_Data['date']).sum()
+Adjusted_U_Count=U_Data[2].groupby(U_Data['date']).count()
+
 
 #plt.plot(Adjusted_K_Price)
 #plt.plot(Adjusted_U_Price)
@@ -50,21 +54,29 @@ Adjusted_U_Volume=U_Data[2].groupby(U_Data['date']).sum()
 
 Adjusted_K_Price=pd.DataFrame(Adjusted_K_Price)
 Adjusted_K_Volume=pd.DataFrame(Adjusted_K_Volume)
+Adjusted_K_Count=pd.DataFrame(Adjusted_K_Count)
 Adjusted_U_Price=pd.DataFrame(Adjusted_U_Price)
 Adjusted_U_Volume=pd.DataFrame(Adjusted_U_Volume)
+Adjusted_U_Count=pd.DataFrame(Adjusted_U_Count)
 
 Adjusted_K_Price['time']=Adjusted_K_Price.index
 Adjusted_K_Volume['time']=Adjusted_K_Volume.index
+Adjusted_K_Count['time']=Adjusted_K_Count.index
 Adjusted_U_Price['time']=Adjusted_U_Price.index
 Adjusted_U_Volume['time']=Adjusted_U_Volume.index
+Adjusted_U_Count['time']=Adjusted_U_Count.index
 
 Adjusted_K_Price.columns=["K_price","time"]
 Adjusted_K_Volume.columns=["K_volume","time"]
+Adjusted_K_Count.columns=["K_count","time"]
 Adjusted_U_Price.columns=["U_price","time"]
 Adjusted_U_Volume.columns=["U_volume","time"]
+Adjusted_U_Count.columns=["U_count","time"]
 
 Data_K=pd.merge(Adjusted_K_Price,Adjusted_K_Volume, on="time")
+Data_K=pd.merge(Data_K,Adjusted_K_Count, on="time")
 Data_U=pd.merge(Adjusted_U_Price,Adjusted_U_Volume, on="time")
+Data_U=pd.merge(Data_U,Adjusted_U_Count, on="time")
 
 Data_K['5min_0']=pd.DataFrame(list(map(lambda x:time_generation(x,0),Data_K['time'])))
 #Data_K['5min_1']=pd.DataFrame(list(map(lambda x:time_generation(x,1),Data_K['time'])))
@@ -81,35 +93,56 @@ Data_U['5min_0']=pd.DataFrame(list(map(lambda x:time_generation(x,0),Data_U['tim
 # %5==0 일때 row : 164068
 Adjusted_K_Price_5_0=Data_K['K_price'].groupby(Data_K['5min_0']).mean()
 Adjusted_K_Volume_5_0=Data_K['K_volume'].groupby(Data_K['5min_0']).sum()
+Adjusted_K_Count_5_0=Data_K['K_count'].groupby(Data_K['5min_0']).sum()
+
 Adjusted_U_Price_5_0=Data_U['U_price'].groupby(Data_U['5min_0']).mean()
 Adjusted_U_Volume_5_0=Data_U['U_volume'].groupby(Data_U['5min_0']).sum()
+Adjusted_U_Count_5_0=Data_U['U_count'].groupby(Data_U['5min_0']).sum()
 
 Adjusted_K_Price_5_0=pd.DataFrame(Adjusted_K_Price_5_0)
 Adjusted_K_Volume_5_0=pd.DataFrame(Adjusted_K_Volume_5_0)
+Adjusted_K_Count_5_0=pd.DataFrame(Adjusted_K_Count_5_0)
 Adjusted_U_Price_5_0=pd.DataFrame(Adjusted_U_Price_5_0)
 Adjusted_U_Volume_5_0=pd.DataFrame(Adjusted_U_Volume_5_0)
+Adjusted_U_Count_5_0=pd.DataFrame(Adjusted_U_Count_5_0)
 
 Adjusted_K_Price_5_0['5min_0']=Adjusted_K_Price_5_0.index
 Adjusted_K_Volume_5_0['5min_0']=Adjusted_K_Volume_5_0.index
+Adjusted_K_Count_5_0['5min_0']=Adjusted_K_Count_5_0.index
 Adjusted_U_Price_5_0['5min_0']=Adjusted_U_Price_5_0.index
 Adjusted_U_Volume_5_0['5min_0']=Adjusted_U_Volume_5_0.index
+Adjusted_U_Count_5_0['5min_0']=Adjusted_U_Count_5_0.index
 
 Adjusted_K_Price_5_0.columns=["K_price","5min_0"]
 Adjusted_K_Volume_5_0.columns=["K_volume","5min_0"]
+Adjusted_K_Count_5_0.columns=["K_count","5min_0"]
 Adjusted_U_Price_5_0.columns=["U_price","5min_0"]
 Adjusted_U_Volume_5_0.columns=["U_volume","5min_0"]
+Adjusted_U_Count_5_0.columns=["U_count","5min_0"]
 
 Data_K_5_0=pd.merge(Adjusted_K_Price_5_0,Adjusted_K_Volume_5_0, on="5min_0")
+Data_K_5_0=pd.merge(Data_K_5_0,Adjusted_K_Count_5_0, on="5min_0")
 Data_U_5_0=pd.merge(Adjusted_U_Price_5_0,Adjusted_U_Volume_5_0, on="5min_0")
+Data_U_5_0=pd.merge(Data_U_5_0,Adjusted_U_Count_5_0, on="5min_0")
 
 Data=pd.merge(Data_K_5_0,Data_U_5_0, on='5min_0')
 
 
 Data['day']=pd.DataFrame(pd.Series(Data['5min_0']).dt.round('D'))
+
+# data 탐색용 Data_explor 생성
+Data_explor=Data
+Data_explor.index=Data_explor['day']
+Data_explor.loc['2014-01-08']
+
+
+
+
 Data_final=pd.merge(Data, Ex_Data, left_on='day', right_on='day')
 Data_final['Adj_U_price']=pd.to_numeric(Data_final['U_price'])*pd.to_numeric(Data_final['Ex_rate'])
 
 Data_final['premium']=((Data_final['K_price']-Data_final['Adj_U_price'])/Data_final['Adj_U_price'])*100
+Data_final.to_csv("data/data_refined.csv")
 
 # 환율차트
 #plt.plot(Data_final['day'],Data_final['Ex_rate'])
@@ -136,6 +169,10 @@ plt.axvline(Data_final['premium'].mean(),color='red')
 plt.show()
 
 Data_final['premium'].plot(kind='box')
+
+# Data final explor data 생성
+Data_final_explor=Data_final
+Data_final_explor.index=Data_final_explor['day']
 # 프리미엄 차트가 right-skewed 되어있음. 
 # 최근으로 올수록 거래량이 많아 최근 데이터일수록 count 수가 많은 현상 보정 필요
 
@@ -156,19 +193,10 @@ del missing_data['premium']
 plt.plot(missing_data)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+# data 탐색용 코드 
+missing_data.loc['2014-01-08':'2014-03-15']
+Data_explor.loc['2017-04-08']
+Data_final_explor.loc['2017-07-08']
 
 
 
