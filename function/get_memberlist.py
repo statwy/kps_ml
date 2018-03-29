@@ -4,7 +4,7 @@ Created on Thu Mar 29 15:53:17 2018
 
 @author: user
 """
-
+#pip install PyMySQL
 import pymysql
 
 def get_memberlist(predict_percent) :
