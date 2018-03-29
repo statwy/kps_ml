@@ -38,19 +38,8 @@ def mail(x,y):
     
     for i in y :
         toaddrs  = i
-
-# Writing the message (this message will appear in the email)
-
-    
-
-# Gmail Login
-
-
-
-# Sending the mail
-
-
-    server.sendmail(fromaddr, toaddrs, msg)
+        server.sendmail(fromaddr, toaddrs, msg)
+   
     server.quit()
 
 

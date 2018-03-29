@@ -4,38 +4,74 @@ import numpy as np
 import matplotlib.pyplot as plt
 from function.crawling_for_mail  import crawling
 from function.mail_func import mail
+import math
 
 
-mail_address=['jwy627@naver.com','jwy627wywy@naver.com','jwy627@korea.ac.kr']
+#mail_address 가져올 때 사용할 함수 짜야함
+mail_address=['jwy627wywy@naver.com']
+
+
+# 초기 데이터 생성용 로직
+j=0
 premium=[]
+for j in range(0,100) : 
+    premium.append(crawling())
+    j+=1
+upper_bound,lower_bound=bollingerband(premium,100)
+
+print('##### 메일 보내는 로직 시작 #####')
+# 메일 보내는 로직 (mail 함수 제목 주는거 고쳐야함)
 i=0
+gener_percentFlag(-10,10)
 while True :
     i+=1
     premium=append_maxsize(premium,crawling(),1000)
-    upper_bound,lower_bound=bollingerband(premium)
-    crawling()
-    if i==300 :
+    upper_bound,lower_bound=bollingerband(premium,100)
+    
+    if not lower_bound[-1] < crawling() < upper_bound[-1]:
+        percent_flag['Boll']=1
+        
+        print( 'Boll 1 이어야돼', percent_flag['Boll'] )
+        
+    if not math.floor(premium[-2]*100)==math.floor(premium[-1]*100) :
+        temp=premium_int(premium[-2],premium[-1])
+        temp_premium='p_%d' %temp
+       
+        if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
+            #temp
+            #mail_address=['jwy627wywy@naver.com']
+        
+            mail('test',mail_address)
+            
+            print('percent_flag[temp_premium] 몇이야', percent_flag[temp_premium])
+            
+        setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
+        
+        print( 'SET Boll 0 이어야돼', percent_flag['Boll'] )
+        print('SET percent_flag[temp_premium] 몇이야(0이어야돼)', percent_flag[temp_premium])
+    if i==200 :
         break
 
+ 
 
 
-#mail('test',mail_address)
-
-
+# bollinger band test plot
 plt.plot(upper_bound)
 plt.plot(premium)
 plt.plot(lower_bound)    
 
 
 
+#함수, 나중에 다른 폴더로 뺄 계획 
+##############################################################################
 
-def bollingerband(x) :
+def bollingerband(x,y) :
     x=pd.DataFrame(x)
-    mva=x.rolling(window=100).mean()
-    mvstd=x.rolling(window=100).std()
-    upper_bound=mva+2*mvstd
-    lower_bound=mva-2*mvstd
-    return upper_bound, lower_bound
+    mva=x.rolling(window=y).mean()
+    mvstd=x.rolling(window=y).std()
+    upper_bound=mva+5*mvstd
+    lower_bound=mva-5*mvstd
+    return list(upper_bound[0]), list(lower_bound[0])
 
 
 def append_maxsize(x,y,z) :
@@ -47,25 +83,26 @@ def append_maxsize(x,y,z) :
     return x
 
 
-
-#####################################################################
-# 밑으로 아직 덜 짰음 ...
-def gener_percent(x,y) :
-    z={}
+def gener_percentFlag(x,y) :
+    global percent_flag
+    percent_flag={}
+    percent_flag['Boll']=1
     for i in range(x,y+1) :
-       print('%d') %i
-        #x['p_%d']=0  %i 
+       a='p_%d' %i
+       percent_flag[a]=1
+
+def setup_percentFlag(x,y,z) :
+    for i in range(x,y+1) :
+        a='p_%d' %i
+        percent_flag[a]=1
+    b='p_%d' %z
+    percent_flag[b]=0
+    percent_flag['Boll']=0
+
+    
+    
+def premium_int(x,y) : 
+    z= max(math.floor(x*100),math.floor(y*100))
     return z 
+
         
-
-
-
-def flag() :
-    for i in range(-16,60) :
-        global p_%d
-   
-   
-for i in range (1,10) :
-    print('%d') %i
-   
-   
