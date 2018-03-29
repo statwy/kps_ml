@@ -69,8 +69,8 @@ def bollingerband(x,y) :
     x=pd.DataFrame(x)
     mva=x.rolling(window=y).mean()
     mvstd=x.rolling(window=y).std()
-    upper_bound=mva+5*mvstd
-    lower_bound=mva-5*mvstd
+    upper_bound=mva+6*mvstd
+    lower_bound=mva-6*mvstd
     return list(upper_bound[0]), list(lower_bound[0])
 
 
