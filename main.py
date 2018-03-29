@@ -4,11 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from function.crawling_for_mail  import crawling
 from function.mail_func import mail
+from function.get_memberlist import get_memberlist
 import math
 
 
 #mail_address 가져올 때 사용할 함수 짜야함
-mail_address=['jwy627wywy@naver.com']
+#mail_address=['jwy627wywy@naver.com']
 
 
 # 초기 데이터 생성용 로직
@@ -38,7 +39,8 @@ while True :
         temp_premium='p_%d' %temp
        
         if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
-            #temp
+            mail_address=get_memberlist(temp)
+            print(mail_address)
             #mail_address=['jwy627wywy@naver.com']
         
             mail('test',mail_address)
@@ -69,8 +71,8 @@ def bollingerband(x,y) :
     x=pd.DataFrame(x)
     mva=x.rolling(window=y).mean()
     mvstd=x.rolling(window=y).std()
-    upper_bound=mva+6*mvstd
-    lower_bound=mva-6*mvstd
+    upper_bound=mva+5*mvstd
+    lower_bound=mva-5*mvstd
     return list(upper_bound[0]), list(lower_bound[0])
 
 
