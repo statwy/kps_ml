@@ -164,6 +164,11 @@ Data_final.to_csv("data/data_refined.csv")
 
 Data_final.describe()
 
+# count 값의 분포 확인
+Data_final['K_count'].hist(bins=30)
+Data_final['U_count'].hist(bins=30)
+
+
 (n,bins, patched)=plt.hist(Data_final['premium'])
 plt.axvline(Data_final['premium'].mean(),color='red')
 plt.show()
