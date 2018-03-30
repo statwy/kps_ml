@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 from function.mail_func import exchange, premiumFunc, mail
 
 
+        
+    
 def crawling() :
     url_bithumb="https://api.bithumb.com/public/ticker/ALL"
     url_coinone="https://api.coinone.co.kr/ticker/?currency=all&format=json"
