@@ -17,7 +17,7 @@ def get_memberlist(predict_percent) :
     curs = conn.cursor()
      
     # SQL문 실행
-    sql = "select address from contact where member_no in (select member_no from alarm where percent=3.0 and type=1) and type=1 and certification=1"
+    sql = "select address from contact where member_no in (select member_no from alarm where percent="+predict_percent+" and type=1) and type=1 and certification=1"
     curs.execute(sql)
     
     # 데이타 Fetch
