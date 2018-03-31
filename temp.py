@@ -94,6 +94,11 @@ def json_to_file(data,coinone,i):
     data.to_csv('data/'+coinone+i+'.csv') 
 
 # while 문 돌면서 timestamp 랑 exchange rate crawling - 시간 간격 30분 ? if 문 안에 넣어서 떨구고 리셋도 함께하기 
-time_exchange_data={'timestamp':[],'exchange_rate':[]}   
+  
 time_exchange_data['timestamp'].append(int(time.time()))
 time_exchange_data['exchange_rate'].append(exchange())
+
+
+
+
+

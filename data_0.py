@@ -10,8 +10,8 @@ import locale
 import datetime
 
 Ex_Data=pd.read_csv("exchange_rate.csv", sep=",",header=None )
-K_Data=pd.read_csv(".korbitKRW.csv", sep="," , header=None)  
-U_Data=pd.read_csv(".krakenUSD.csv", sep="," , header=None) 
+K_Data=pd.read_csv("data/.korbitKRW.csv", sep="," , header=None)  
+U_Data=pd.read_csv("data/.krakenUSD.csv", sep="," , header=None) 
 
 K_Data=pd.DataFrame(K_Data)
 U_Data=pd.DataFrame(U_Data)
