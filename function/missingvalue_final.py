@@ -25,11 +25,17 @@ Data_refined_f['day_1']=pd.DataFrame(pd.Series(pd.to_datetime(Data_refined_f['5m
 #Data_refined_f['day_2']=pd.DataFrame(pd.Series(pd.to_datetime(Data_refined_f['5min_0'])).dt.floor('D'))
 
 Data_refined_f['K_price_Rtn']=np.log(Data_refined_f['K_price'])-np.log(Data_refined_f['K_price']).shift(1)
+
+#plt.plot(Data_refined_f['K_price_Rtn'])
+#Data_refined_f['K_price_Rtn'].hist(bins=50)
+
+
 Data_refined_f['Adj_U_price_Rtn']=np.log(Data_refined_f['Adj_U_price'])-np.log(Data_refined_f['Adj_U_price']).shift(1)
 
 Data_refined_f.fillna(method='bfill', inplace=True)
 
 Day_Count=Data_refined_f['day_1'].groupby(Data_refined_f['day_1']).count()
+
 Day_Count=pd.DataFrame(Day_Count)
 Day_Count['Day_Count']=Day_Count.index
 Day_Count.columns=["Day_Count","day_1"]

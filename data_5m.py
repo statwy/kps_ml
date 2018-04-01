@@ -169,7 +169,7 @@ Data_final['K_count'].hist(bins=30)
 Data_final['U_count'].hist(bins=30)
 
 
-(n,bins, patched)=plt.hist(Data_final['premium'])
+plt.hist(Data_final['premium'])
 plt.axvline(Data_final['premium'].mean(),color='red')
 plt.show()
 
@@ -195,8 +195,16 @@ missing_data=missing_data[['5min','premium']]
 missing_data['day']=pd.DataFrame(pd.Series(missing_data['5min']).dt.round('D'))
 missing_data=missing_data.groupby('day').count()
 del missing_data['premium']
-plt.plot(missing_data)
+plt.plot(missing_data.loc['2018-01-08':'2018-03-11'])
 
+missing_data.loc['2018-01-08':'2018-03-11']
+missing_data['date']=missing_data.index
+for i in range(len(missing_data)-1) :
+    print(missing_data['5min'][i])
+#    if missing_data['5min'].loc(i)>=200 :
+  #      print(missing_data[i]['5min']>=200 )
+
+max(missing_data.loc['2018-01-08':'2018-03-11'])
 
 # data 탐색용 코드 
 temp=missing_data.loc['2014-01-08':'2014-03-15']
@@ -206,114 +214,4 @@ Data_final_explor.loc['2017-07-08']
 
 
 
-# %5==1 일때 row : 164101
-#Adjusted_K_Price_5_0=Data_K['K_price'].groupby(Data_K['5min_1']).mean()
-#Adjusted_K_Volume_5_0=Data_K['K_volume'].groupby(Data_K['5min_1']).sum()
-#Adjusted_U_Price_5_0=Data_U['U_price'].groupby(Data_U['5min_1']).mean()
-#Adjusted_U_Volume_5_0=Data_U['U_volume'].groupby(Data_U['5min_1']).sum()
-#
-#Adjusted_K_Price_5_0=pd.DataFrame(Adjusted_K_Price_5_0)
-#Adjusted_K_Volume_5_0=pd.DataFrame(Adjusted_K_Volume_5_0)
-#Adjusted_U_Price_5_0=pd.DataFrame(Adjusted_U_Price_5_0)
-#Adjusted_U_Volume_5_0=pd.DataFrame(Adjusted_U_Volume_5_0)
-#
-#Adjusted_K_Price_5_0['5min_1']=Adjusted_K_Price_5_0.index
-#Adjusted_K_Volume_5_0['5min_1']=Adjusted_K_Volume_5_0.index
-#Adjusted_U_Price_5_0['5min_1']=Adjusted_U_Price_5_0.index
-#Adjusted_U_Volume_5_0['5min_1']=Adjusted_U_Volume_5_0.index
-#
-#Adjusted_K_Price_5_0.columns=["K_price","5min_1"]
-#Adjusted_K_Volume_5_0.columns=["K_volume","5min_1"]
-#Adjusted_U_Price_5_0.columns=["U_price","5min_1"]
-#Adjusted_U_Volume_5_0.columns=["U_volume","5min_1"]
-#
-#Data_K_5_0=pd.merge(Adjusted_K_Price_5_0,Adjusted_K_Volume_5_0, on="5min_1")
-#Data_U_5_0=pd.merge(Adjusted_U_Price_5_0,Adjusted_U_Volume_5_0, on="5min_1")
-#
-#
-#Data=pd.merge(Data_K_5_0,Data_U_5_0, on='5min_1')
-
-
-
-# %5==2 일때 row : 164292
-#Adjusted_K_Price_5_0=Data_K['K_price'].groupby(Data_K['5min_2']).mean()
-#Adjusted_K_Volume_5_0=Data_K['K_volume'].groupby(Data_K['5min_2']).sum()
-#Adjusted_U_Price_5_0=Data_U['U_price'].groupby(Data_U['5min_2']).mean()
-#Adjusted_U_Volume_5_0=Data_U['U_volume'].groupby(Data_U['5min_2']).sum()
-#
-#Adjusted_K_Price_5_0=pd.DataFrame(Adjusted_K_Price_5_0)
-#Adjusted_K_Volume_5_0=pd.DataFrame(Adjusted_K_Volume_5_0)
-#Adjusted_U_Price_5_0=pd.DataFrame(Adjusted_U_Price_5_0)
-#Adjusted_U_Volume_5_0=pd.DataFrame(Adjusted_U_Volume_5_0)
-#
-#Adjusted_K_Price_5_0['5min_2']=Adjusted_K_Price_5_0.index
-#Adjusted_K_Volume_5_0['5min_2']=Adjusted_K_Volume_5_0.index
-#Adjusted_U_Price_5_0['5min_2']=Adjusted_U_Price_5_0.index
-#Adjusted_U_Volume_5_0['5min_2']=Adjusted_U_Volume_5_0.index
-#
-#Adjusted_K_Price_5_0.columns=["K_price","5min_2"]
-#Adjusted_K_Volume_5_0.columns=["K_volume","5min_2"]
-#Adjusted_U_Price_5_0.columns=["U_price","5min_2"]
-#Adjusted_U_Volume_5_0.columns=["U_volume","5min_2"]
-#
-#Data_K_5_0=pd.merge(Adjusted_K_Price_5_0,Adjusted_K_Volume_5_0, on="5min_2")
-#Data_U_5_0=pd.merge(Adjusted_U_Price_5_0,Adjusted_U_Volume_5_0, on="5min_2")
-#
-#Data=pd.merge(Data_K_5_0,Data_U_5_0, on='5min_2')
-
-
-# %5==3 일때 row : 164086
-#Adjusted_K_Price_5_0=Data_K['K_price'].groupby(Data_K['5min_3']).mean()
-#Adjusted_K_Volume_5_0=Data_K['K_volume'].groupby(Data_K['5min_3']).sum()
-#Adjusted_U_Price_5_0=Data_U['U_price'].groupby(Data_U['5min_3']).mean()
-#Adjusted_U_Volume_5_0=Data_U['U_volume'].groupby(Data_U['5min_3']).sum()
-#
-#Adjusted_K_Price_5_0=pd.DataFrame(Adjusted_K_Price_5_0)
-#Adjusted_K_Volume_5_0=pd.DataFrame(Adjusted_K_Volume_5_0)
-#Adjusted_U_Price_5_0=pd.DataFrame(Adjusted_U_Price_5_0)
-#Adjusted_U_Volume_5_0=pd.DataFrame(Adjusted_U_Volume_5_0)
-#
-#Adjusted_K_Price_5_0['5min_3']=Adjusted_K_Price_5_0.index
-#Adjusted_K_Volume_5_0['5min_3']=Adjusted_K_Volume_5_0.index
-#Adjusted_U_Price_5_0['5min_3']=Adjusted_U_Price_5_0.index
-#Adjusted_U_Volume_5_0['5min_3']=Adjusted_U_Volume_5_0.index
-#
-#Adjusted_K_Price_5_0.columns=["K_price","5min_3"]
-#Adjusted_K_Volume_5_0.columns=["K_volume","5min_3"]
-#Adjusted_U_Price_5_0.columns=["U_price","5min_3"]
-#Adjusted_U_Volume_5_0.columns=["U_volume","5min_3"]
-#
-#Data_K_5_0=pd.merge(Adjusted_K_Price_5_0,Adjusted_K_Volume_5_0, on="5min_3")
-#Data_U_5_0=pd.merge(Adjusted_U_Price_5_0,Adjusted_U_Volume_5_0, on="5min_3")
-#
-#Data=pd.merge(Data_K_5_0,Data_U_5_0, on='5min_3')
-
-
-
-# %5==3 일때 row : 163989
-#Adjusted_K_Price_5_0=Data_K['K_price'].groupby(Data_K['5min_4']).mean()
-#Adjusted_K_Volume_5_0=Data_K['K_volume'].groupby(Data_K['5min_4']).sum()
-#Adjusted_U_Price_5_0=Data_U['U_price'].groupby(Data_U['5min_4']).mean()
-#Adjusted_U_Volume_5_0=Data_U['U_volume'].groupby(Data_U['5min_4']).sum()
-#
-#Adjusted_K_Price_5_0=pd.DataFrame(Adjusted_K_Price_5_0)
-#Adjusted_K_Volume_5_0=pd.DataFrame(Adjusted_K_Volume_5_0)
-#Adjusted_U_Price_5_0=pd.DataFrame(Adjusted_U_Price_5_0)
-#Adjusted_U_Volume_5_0=pd.DataFrame(Adjusted_U_Volume_5_0)
-#
-#Adjusted_K_Price_5_0['5min_4']=Adjusted_K_Price_5_0.index
-#Adjusted_K_Volume_5_0['5min_4']=Adjusted_K_Volume_5_0.index
-#Adjusted_U_Price_5_0['5min_4']=Adjusted_U_Price_5_0.index
-#Adjusted_U_Volume_5_0['5min_4']=Adjusted_U_Volume_5_0.index
-#
-#Adjusted_K_Price_5_0.columns=["K_price","5min_4"]
-#Adjusted_K_Volume_5_0.columns=["K_volume","5min_4"]
-#Adjusted_U_Price_5_0.columns=["U_price","5min_4"]
-#Adjusted_U_Volume_5_0.columns=["U_volume","5min_4"]
-#
-#Data_K_5_0=pd.merge(Adjusted_K_Price_5_0,Adjusted_K_Volume_5_0, on="5min_4")
-#Data_U_5_0=pd.merge(Adjusted_U_Price_5_0,Adjusted_U_Volume_5_0, on="5min_4")
-#
-#
-#Data=pd.merge(Data_K_5_0,Data_U_5_0, on='5min_4')
 
