@@ -108,8 +108,8 @@ while True :
         start_time_h=datetime.datetime.now()
         j+=1
     
-    if i==2000 :
-        break
+#    if i==2000 :
+#        break
 
 
 # bollinger band test plot
