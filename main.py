@@ -1,15 +1,61 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from function.crawling_for_mail  import crawling
 from function.crawling_for_mail  import data_to_file, exchange_rate_to_file
-from function.mail_func import mail
+from function.mail_func import mail, exchange
 from function.get_memberlist import get_memberlist
 import math
 import datetime
+import time
+
+def bollingerband(x,y=100,sigma=5) :
+    x=pd.DataFrame(x)
+    mva=x.rolling(window=y).mean()
+    mvstd=x.rolling(window=y).std()
+    upper_bound=mva+sigma*mvstd
+    lower_bound=mva-sigma*mvstd
+    return list(upper_bound[0]), list(lower_bound[0])
+
+
+def append_maxsize(x,y,z) :
+    if len(x)<z :
+        x.append(y)
+    else :
+        x.pop(0)
+        x.append(y) 
+    return x
+
+
+def gener_percentFlag(x,y) :
+    global percent_flag
+    percent_flag={}
+    percent_flag['Boll']=1
+    for i in range(x,y+1) :
+       a='p_%d' %i
+       percent_flag[a]=1
+
+def setup_percentFlag(x,y,z) :
+    for i in range(x,y+1) :
+        a='p_%d' %i
+        percent_flag[a]=1
+    b='p_%d' %z
+    percent_flag[b]=0
+    percent_flag['Boll']=0
+
+       
+def premium_int(x,y) : 
+    z= max(math.floor(x*100),math.floor(y*100))
+    return z 
+
+
+
 
 # 초기 데이터 생성용 로직
+
+
+
+
 
 j=0
 premium=[]
@@ -75,43 +121,43 @@ plt.plot(lower_bound)
 #함수, 나중에 다른 폴더로 뺄 계획 
 ##############################################################################
 
-def bollingerband(x,y=100,sigma=5) :
-    x=pd.DataFrame(x)
-    mva=x.rolling(window=y).mean()
-    mvstd=x.rolling(window=y).std()
-    upper_bound=mva+sigma*mvstd
-    lower_bound=mva-sigma*mvstd
-    return list(upper_bound[0]), list(lower_bound[0])
-
-
-def append_maxsize(x,y,z) :
-    if len(x)<z :
-        x.append(y)
-    else :
-        x.pop(0)
-        x.append(y) 
-    return x
-
-
-def gener_percentFlag(x,y) :
-    global percent_flag
-    percent_flag={}
-    percent_flag['Boll']=1
-    for i in range(x,y+1) :
-       a='p_%d' %i
-       percent_flag[a]=1
-
-def setup_percentFlag(x,y,z) :
-    for i in range(x,y+1) :
-        a='p_%d' %i
-        percent_flag[a]=1
-    b='p_%d' %z
-    percent_flag[b]=0
-    percent_flag['Boll']=0
-
-       
-def premium_int(x,y) : 
-    z= max(math.floor(x*100),math.floor(y*100))
-    return z 
-
-        
+#def bollingerband(x,y=100,sigma=5) :
+#    x=pd.DataFrame(x)
+#    mva=x.rolling(window=y).mean()
+#    mvstd=x.rolling(window=y).std()
+#    upper_bound=mva+sigma*mvstd
+#    lower_bound=mva-sigma*mvstd
+#    return list(upper_bound[0]), list(lower_bound[0])
+#
+#
+#def append_maxsize(x,y,z) :
+#    if len(x)<z :
+#        x.append(y)
+#    else :
+#        x.pop(0)
+#        x.append(y) 
+#    return x
+#
+#
+#def gener_percentFlag(x,y) :
+#    global percent_flag
+#    percent_flag={}
+#    percent_flag['Boll']=1
+#    for i in range(x,y+1) :
+#       a='p_%d' %i
+#       percent_flag[a]=1
+#
+#def setup_percentFlag(x,y,z) :
+#    for i in range(x,y+1) :
+#        a='p_%d' %i
+#        percent_flag[a]=1
+#    b='p_%d' %z
+#    percent_flag[b]=0
+#    percent_flag['Boll']=0
+#
+#       
+#def premium_int(x,y) : 
+#    z= max(math.floor(x*100),math.floor(y*100))
+#    return z 
+#
+#        
