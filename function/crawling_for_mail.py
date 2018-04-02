@@ -23,8 +23,8 @@ def crawling(x='bithumb',y='poloniex') :
         
         #try
         
-        data_K=json.load(req.urlopen(crawling_url_K))
-        data_U=json.load(req.urlopen(crawling_url_U))
+        data_K=json.loads((req.urlopen(crawling_url_K).read()).decode('utf-8'))
+        data_U=json.loads((req.urlopen(crawling_url_U).read()).decode('utf-8'))
         
         
         err_code=0        
@@ -35,7 +35,7 @@ def crawling(x='bithumb',y='poloniex') :
             else :
                 err_code=1
                 print('bithumb error')
-                data_K=json.load(req.urlopen(url['coinone']))
+                data_K=json.loads((req.urlopen(url['coinone']).read()).decode('utf-8'))
                 if data_K['result']=='success' :
                     k_price=data_K['last']
                 else :
@@ -49,7 +49,7 @@ def crawling(x='bithumb',y='poloniex') :
             else :
                 err_code=2
                 print('coinone error')
-                data_K=json.load(req.urlopen(url['bithumb']))            
+                data_K=json.loads((req.urlopen(url['bithumb']).read()).decode('utf-8'))          
                 if data_K['status']=='0000' :
                     k_price=data_K['data']['closing_price']
                 else :
@@ -63,7 +63,7 @@ def crawling(x='bithumb',y='poloniex') :
             except:
                 print('poloniex error')
                 err_code=3
-                data_U=json.load(req.urlopen(url['bitfinex']))
+                data_U=json.loads((req.urlopen(url['bitfinex']).read()).decode('utf-8'))
                 u_price=data_U['last_price']
                 
         if y =='kraken' :
@@ -73,7 +73,7 @@ def crawling(x='bithumb',y='poloniex') :
             else :
                 err_code=4
                 print('kraken error')
-                data_U=json.load(req.urlopen(url['poloniex']))
+                data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
                 u_price=data_U['USDT_BTC']['last']
                 
         if y=='bitfinex' :
@@ -82,7 +82,7 @@ def crawling(x='bithumb',y='poloniex') :
             except :
                 print('bitfinex error')
                 err_code=5
-                data_U=json.load(req.urlopen(url['poloniex']))
+                data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
                 u_price=data_U['USDT_BTC']['last']
                       
     else :
@@ -106,17 +106,17 @@ def data_to_file(i) :
     before_hour_timestamp=str(int(now_timestamp)-3600000000000)
     url_coinone = 'https://api.coinone.co.kr/trades/?currency=btc&period=hour&format=json'
     url_kraken = 'https://api.kraken.com/0/public/Trades?pair=XBTUSD&since='+before_hour_timestamp # since 값을 한시간씩 옮기면 될듯.
+    json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
     
-    
-    res_coinone=req.urlopen(url_coinone)
-    data_coinone=json.load(res_coinone)
+    res_coinone=req.urlopen(url_coinone).read()
+    data_coinone=json.loads(res_coinone.decode('utf-8'))
     data_coinone=pd.DataFrame(data_coinone['completeOrders'])
     data_coinone=data_coinone[['timestamp','price','qty']]
     json_to_file(data_coinone,'coinone',i)
       
     
-    res_kraken=req.urlopen(url_kraken)
-    data_kraken=json.load(res_kraken)
+    res_kraken=req.urlopen(url_kraken).read()
+    data_kraken=json.loads(res_kraken.decode('utf-8'))
     data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
     data_kraken=data_kraken[[2,0,1]]
     data_kraken.columns=['timestamp','price','qty']
