@@ -106,7 +106,7 @@ def data_to_file(i) :
     before_hour_timestamp=str(int(now_timestamp)-3600000000000)
     url_coinone = 'https://api.coinone.co.kr/trades/?currency=btc&period=hour&format=json'
     url_kraken = 'https://api.kraken.com/0/public/Trades?pair=XBTUSD&since='+before_hour_timestamp # since 값을 한시간씩 옮기면 될듯.
-    json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
+ 
     
     res_coinone=req.urlopen(url_coinone).read()
     data_coinone=json.loads(res_coinone.decode('utf-8'))
