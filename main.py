@@ -93,7 +93,7 @@ while True :
         setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
         
     time_for_logic_m=datetime.datetime.now()-start_time_m
-    if time_for_logic_m.total_seconds()>36 :   
+    if time_for_logic_m.total_seconds()>3600 :   
         time_exchange_data['timestamp'].append(int(time.time()))
         time_exchange_data['exchange_rate'].append(exchange())
         data_to_file(m)
@@ -102,7 +102,7 @@ while True :
         
     time_for_logic_h=datetime.datetime.now()-start_time_h
     
-    if time_for_logic_h.total_seconds()>36*12 :
+    if time_for_logic_h.total_seconds()>3600*12 :
         exchange_rate_to_file(time_exchange_data,j)
         time_exchange_data={'timestamp':[],'exchange_rate':[]} 
         start_time_h=datetime.datetime.now()
