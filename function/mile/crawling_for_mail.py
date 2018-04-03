@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 import urllib.request as req
 import json 
@@ -6,7 +5,7 @@ import pandas as pd
 import time
 from bs4 import BeautifulSoup
 from function.mail_func import exchange, premiumFunc, mail
-#from function.savetohadoop import savetohadoop, savetohadoop_d
+
   
 def crawling(x='bithumb',y='poloniex') :
     url={'bithumb':"https://api.bithumb.com/public/ticker/BTC",
@@ -22,20 +21,12 @@ def crawling(x='bithumb',y='poloniex') :
         crawling_url_K =url[x]
         crawling_url_U =url[y]
         
-        for i in range(0,10) :
-            
-            try : 
-                
-                data_K=json.loads((req.urlopen(crawling_url_K).read()).decode('utf-8'))
-                data_U=json.loads((req.urlopen(crawling_url_U).read()).decode('utf-8'))
-            
-            except :
-            
-                print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",i)
-                
-            if not pd.DataFrame(data_K).empty :
-                break
-             
+        #try
+        
+        data_K=json.loads((req.urlopen(crawling_url_K).read()).decode('utf-8'))
+        data_U=json.loads((req.urlopen(crawling_url_U).read()).decode('utf-8'))
+        
+        
         err_code=0        
         if x=='bithumb' :
             
@@ -44,15 +35,7 @@ def crawling(x='bithumb',y='poloniex') :
             else :
                 err_code=1
                 print('bithumb error')
-               
-                for a in range(0,10) :
-                    try :
-                        data_K=json.loads((req.urlopen(url['coinone']).read()).decode('utf-8'))
-                    except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
-                    if not pd.DataFrame(data_K).empty :
-                        break
-                data_K=json.loads(req.urlopen(url['coinone']))
+                data_K=json.loads((req.urlopen(url['coinone']).read()).decode('utf-8'))
                 if data_K['result']=='success' :
                     k_price=data_K['last']
                 else :
@@ -66,15 +49,7 @@ def crawling(x='bithumb',y='poloniex') :
             else :
                 err_code=2
                 print('coinone error')
-                
-                for a in range(0,10) :
-                    try :
-                        data_K=json.loads((req.urlopen(url['bithumb']).read()).decode('utf-8'))
-                    except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
-                    if not pd.DataFrame(data_K).empty :
-                        break       
-                data_K=json.loads(req.urlopen(url['bithumb']))            
+                data_K=json.loads((req.urlopen(url['bithumb']).read()).decode('utf-8'))          
                 if data_K['status']=='0000' :
                     k_price=data_K['data']['closing_price']
                 else :
@@ -88,17 +63,9 @@ def crawling(x='bithumb',y='poloniex') :
             except:
                 print('poloniex error')
                 err_code=3
-                data_U=json.loads(req.urlopen(url['bitfinex']))
+                data_U=json.loads((req.urlopen(url['bitfinex']).read()).decode('utf-8'))
                 u_price=data_U['last_price']
                 
-                for a in range(0,10) :
-                    try :
-                        data_U=json.loads((req.urlopen(url['bitfinex']).read()).decode('utf-8'))
-                    except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
-                    if not pd.DataFrame(data_U).empty :
-                        break       
-                u_price=data_U['last_price']      
         if y =='kraken' :
             
             if data_U['error'] ==[] :
@@ -106,15 +73,7 @@ def crawling(x='bithumb',y='poloniex') :
             else :
                 err_code=4
                 print('kraken error')
-                
-                for a in range(0,10) :
-                    try :
-                        data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
-                    except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
-                    if not pd.DataFrame(data_U).empty :
-                        break    
-
+                data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
                 u_price=data_U['USDT_BTC']['last']
                 
         if y=='bitfinex' :
@@ -123,14 +82,7 @@ def crawling(x='bithumb',y='poloniex') :
             except :
                 print('bitfinex error')
                 err_code=5
-                
-                for a in range(0,10) :
-                    try :
-                        data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
-                    except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
-                    if not pd.DataFrame(data_U).empty :
-                        break  
+                data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
                 u_price=data_U['USDT_BTC']['last']
                       
     else :
@@ -154,29 +106,17 @@ def data_to_file(i) :
     before_hour_timestamp=str(int(now_timestamp)-3600000000000)
     url_coinone = 'https://api.coinone.co.kr/trades/?currency=btc&period=hour&format=json'
     url_kraken = 'https://api.kraken.com/0/public/Trades?pair=XBTUSD&since='+before_hour_timestamp # since 값을 한시간씩 옮기면 될듯.
-
  
-    for i in range(0,10) :
-        try :
-            res_coinone=req.urlopen(url_coinone).read()
-            data_coinone=json.loads(res_coinone.decode('utf-8'))
-        except :
-            print("파일 저장을 위한 코인원 웹사이트 접속에서 에러 발생",i)
-        if not pd.DataFrame(data_coinone).empty :
-             break       
+    
+    res_coinone=req.urlopen(url_coinone).read()
+    data_coinone=json.loads(res_coinone.decode('utf-8'))
     data_coinone=pd.DataFrame(data_coinone['completeOrders'])
     data_coinone=data_coinone[['timestamp','price','qty']]
     json_to_file(data_coinone,'coinone',i)
-
-    for a in range(0,10) :
-        try :    
-            res_kraken=req.urlopen(url_kraken).read()
-            data_kraken=json.loads(res_kraken.decode('utf-8'))
-        except :
-            print("파일 저장을 위한 kraken 웹사이트 접속에서 에러 발생",a)
-        if not pd.DataFrame(data_kraken).empty :
-            break
-
+      
+    
+    res_kraken=req.urlopen(url_kraken).read()
+    data_kraken=json.loads(res_kraken.decode('utf-8'))
     data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
     data_kraken=data_kraken[[2,0,1]]
     data_kraken.columns=['timestamp','price','qty']
@@ -190,11 +130,12 @@ def exchange_rate_to_file(exchange_data,i):
     
 def json_to_file(data,coinone,i):
     i=str(i)
-    filename=coinone+i
     data=pd.DataFrame(data)
-    data.to_csv('data/'+filename+'.csv')
-    #savetohadoop_d(data,filename)
-    #savetohadoop(filename)
+    data.to_csv('data/'+coinone+i+'.csv') 
+
+
+
+
 
 
 
