@@ -16,7 +16,8 @@ def crawling(x='bithumb',y='poloniex') :
          'bitfinex':"https://api.bitfinex.com/v1/pubticker/btcusd"
          }
     global err_code
-    
+    global data_K
+    global data_U
     
     if (x=='bithumb' or x=='coinone') and (y=='poloniex' or y=='kraken' or y=='bitfinex') :
         crawling_url_K =url[x]
@@ -24,16 +25,29 @@ def crawling(x='bithumb',y='poloniex') :
         
         for i in range(0,10) :
             
-            try : 
-                
-                data_K=json.loads((req.urlopen(crawling_url_K).read()).decode('utf-8'))
-                data_U=json.loads((req.urlopen(crawling_url_U).read()).decode('utf-8'))
-            
+            try :       
+                data_K=json.loads((req.urlopen(crawling_url_K).read()).decode('utf-8'))   
+            except :          
+                print("한국 거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",i)
+            try :    
+                k_flag=pd.DataFrame(data_K).empty
             except :
+                print("k_flag error")
+            if not k_flag :
+                break
+        
+        for z in range(0,10) :
             
-                print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",i)
-                
-            if not pd.DataFrame(data_K).empty :
+            try :                 
+                data_U=json.loads((req.urlopen(crawling_url_U).read()).decode('utf-8'))
+            except :            
+                print("외국 거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",i)
+            
+            try :    
+                u_flag=pd.DataFrame(data_U).empty
+            except :
+                print("k_flag error")
+            if not u_flag :
                 break
              
         err_code=0        
@@ -141,7 +155,8 @@ def crawling(x='bithumb',y='poloniex') :
     print(
         "krw:", k_price,
         "usd:", u_price,
-        "premium:", premium
+        "premium:", premium,
+        "error", err_code
         )    
     return premium
 
@@ -156,13 +171,17 @@ def data_to_file(i) :
     url_kraken = 'https://api.kraken.com/0/public/Trades?pair=XBTUSD&since='+before_hour_timestamp # since 값을 한시간씩 옮기면 될듯.
 
  
-    for i in range(0,10) :
+    for x in range(0,10) :
         try :
             res_coinone=req.urlopen(url_coinone).read()
             data_coinone=json.loads(res_coinone.decode('utf-8'))
         except :
-            print("파일 저장을 위한 코인원 웹사이트 접속에서 에러 발생",i)
-        if not pd.DataFrame(data_coinone).empty :
+            print("파일 저장을 위한 코인원 웹사이트 접속에서 에러 발생",x)
+        try :
+            k_flag=pd.DataFrame(data_coinone).empty
+        except :
+            print("파일저장 k_flag error")
+        if not k_flag :
              break       
     data_coinone=pd.DataFrame(data_coinone['completeOrders'])
     data_coinone=data_coinone[['timestamp','price','qty']]
@@ -174,7 +193,11 @@ def data_to_file(i) :
             data_kraken=json.loads(res_kraken.decode('utf-8'))
         except :
             print("파일 저장을 위한 kraken 웹사이트 접속에서 에러 발생",a)
-        if not pd.DataFrame(data_kraken).empty :
+        try :
+            flag=pd.DataFrame(data_kraken['result']['XXBTZUSD']).empty
+        except :
+             print("파일 저장을 위한 kraken flag 값 에러",a)
+        if not flag :
             break
 
     data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])

@@ -59,10 +59,10 @@ def premium_int(x,y) :
 
 j=0
 premium=[]
-for j in range(0,100) : 
+for j in range(0,10) : 
     premium.append(crawling('bithumb','poloniex'))
     j+=1
-upper_bound,lower_bound=bollingerband(premium,100,5)
+upper_bound,lower_bound=bollingerband(premium,10,5)
 
 
 print('##### 메일 보내는 로직 시작 #####')
@@ -77,7 +77,7 @@ start_time_h=datetime.datetime.now()
 while True :
     i+=1    
     premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
-    upper_bound,lower_bound=bollingerband(premium,100,5)
+    upper_bound,lower_bound=bollingerband(premium,10,5)
     
     if not lower_bound[-1] < crawling('bithumb','poloniex') < upper_bound[-1]:
         percent_flag['Boll']=1
@@ -93,7 +93,7 @@ while True :
         setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
         
     time_for_logic_m=datetime.datetime.now()-start_time_m
-    if time_for_logic_m.total_seconds()>3600 :   
+    if time_for_logic_m.total_seconds()>36 :   
         time_exchange_data['timestamp'].append(int(time.time()))
         time_exchange_data['exchange_rate'].append(exchange())
         data_to_file(m)
@@ -102,7 +102,7 @@ while True :
         
     time_for_logic_h=datetime.datetime.now()-start_time_h
     
-    if time_for_logic_h.total_seconds()>3600*12 :
+    if time_for_logic_h.total_seconds()>36*12 :
         exchange_rate_to_file(time_exchange_data,j)
         time_exchange_data={'timestamp':[],'exchange_rate':[]} 
         start_time_h=datetime.datetime.now()
