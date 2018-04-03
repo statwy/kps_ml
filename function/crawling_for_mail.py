@@ -184,8 +184,12 @@ def data_to_file(i) :
             coinone_flag=pd.DataFrame(data_coinone).empty
         except :
             print("파일저장 coinone_flag error")
-        if not coinone_flag :
-             break       
+        try :
+            if not coinone_flag :
+                break   
+        except :
+            print("파일저장 coinone_flag BREAK error")
+          
     data_coinone=pd.DataFrame(data_coinone['completeOrders'])
     data_coinone=data_coinone[['timestamp','price','qty']]
     json_to_file(data_coinone,'coinone',i)
@@ -200,8 +204,11 @@ def data_to_file(i) :
             kraken_flag=pd.DataFrame(data_kraken['result']['XXBTZUSD']).empty
         except :
              print("파일 저장을 위한 kraken flag 값 에러",a)
-        if not kraken_flag :
-            break
+        try :     
+            if not kraken_flag :
+                break
+        except :
+            print("파일 저장을 위한 kraken flag 값 BREAK 에러",a)
 
     data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
     data_kraken=data_kraken[[2,0,1]]
