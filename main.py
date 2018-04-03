@@ -74,7 +74,7 @@ time_exchange_data={'timestamp':[],'exchange_rate':[]}
 start_time_m=datetime.datetime.now()
 start_time_h=datetime.datetime.now()
 while True :
-    time.sleep(10)
+    time.sleep(5)
     i+=1    
     premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
     upper_bound,lower_bound=bollingerband(premium,10,5)
@@ -96,7 +96,12 @@ while True :
     if time_for_logic_m.total_seconds()>36 :   
         time_exchange_data['timestamp'].append(int(time.time()))
         time_exchange_data['exchange_rate'].append(exchange())
-        data_to_file(m)
+        
+        try :
+            data_to_file(m)
+        except :
+            time.sleep(10)
+            data_to_file(m)
         m+=1
         start_time_m=datetime.datetime.now()
         

@@ -203,13 +203,13 @@ def data_to_file(i) :
         try :
             kraken_flag=pd.DataFrame(data_kraken['result']['XXBTZUSD']).empty
         except :
-             print("파일 저장을 위한 kraken flag 값 에러",a)
+            print("파일 저장을 위한 kraken flag 값 에러",a)
         try :     
             if not kraken_flag :
                 break
         except :
             print("파일 저장을 위한 kraken flag 값 BREAK 에러",a)
-
+   
     data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
     data_kraken=data_kraken[[2,0,1]]
     data_kraken.columns=['timestamp','price','qty']
