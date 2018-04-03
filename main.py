@@ -56,7 +56,6 @@ def premium_int(x,y) :
 
 
 
-
 j=0
 premium=[]
 for j in range(0,10) : 
@@ -75,6 +74,7 @@ time_exchange_data={'timestamp':[],'exchange_rate':[]}
 start_time_m=datetime.datetime.now()
 start_time_h=datetime.datetime.now()
 while True :
+    time.sleep(10)
     i+=1    
     premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
     upper_bound,lower_bound=bollingerband(premium,10,5)

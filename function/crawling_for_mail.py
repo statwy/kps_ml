@@ -18,6 +18,8 @@ def crawling(x='bithumb',y='poloniex') :
     global err_code
     global data_K
     global data_U
+    global k_flag
+    global u_flag
     
     if (x=='bithumb' or x=='coinone') and (y=='poloniex' or y=='kraken' or y=='bitfinex') :
         crawling_url_K =url[x]
@@ -41,7 +43,7 @@ def crawling(x='bithumb',y='poloniex') :
             try :                 
                 data_U=json.loads((req.urlopen(crawling_url_U).read()).decode('utf-8'))
             except :            
-                print("외국 거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",i)
+                print("외국 거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",z)
             
             try :    
                 u_flag=pd.DataFrame(data_U).empty
@@ -105,11 +107,11 @@ def crawling(x='bithumb',y='poloniex') :
                 data_U=json.loads(req.urlopen(url['bitfinex']))
                 u_price=data_U['last_price']
                 
-                for a in range(0,10) :
+                for v in range(0,10) :
                     try :
                         data_U=json.loads((req.urlopen(url['bitfinex']).read()).decode('utf-8'))
                     except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
+                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",v)
                     if not pd.DataFrame(data_U).empty :
                         break       
                 u_price=data_U['last_price']      
@@ -121,11 +123,11 @@ def crawling(x='bithumb',y='poloniex') :
                 err_code=4
                 print('kraken error')
                 
-                for a in range(0,10) :
+                for g in range(0,10) :
                     try :
                         data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
                     except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
+                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",g)
                     if not pd.DataFrame(data_U).empty :
                         break    
 
@@ -138,11 +140,11 @@ def crawling(x='bithumb',y='poloniex') :
                 print('bitfinex error')
                 err_code=5
                 
-                for a in range(0,10) :
+                for t in range(0,10) :
                     try :
                         data_U=json.loads((req.urlopen(url['poloniex']).read()).decode('utf-8'))
                     except :
-                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",a)
+                        print("거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",t)
                     if not pd.DataFrame(data_U).empty :
                         break  
                 u_price=data_U['USDT_BTC']['last']
@@ -169,7 +171,8 @@ def data_to_file(i) :
     before_hour_timestamp=str(int(now_timestamp)-3600000000000)
     url_coinone = 'https://api.coinone.co.kr/trades/?currency=btc&period=hour&format=json'
     url_kraken = 'https://api.kraken.com/0/public/Trades?pair=XBTUSD&since='+before_hour_timestamp # since 값을 한시간씩 옮기면 될듯.
-
+    global coinone_flag
+    global kraken_flag
  
     for x in range(0,10) :
         try :
@@ -178,10 +181,10 @@ def data_to_file(i) :
         except :
             print("파일 저장을 위한 코인원 웹사이트 접속에서 에러 발생",x)
         try :
-            k_flag=pd.DataFrame(data_coinone).empty
+            coinone_flag=pd.DataFrame(data_coinone).empty
         except :
-            print("파일저장 k_flag error")
-        if not k_flag :
+            print("파일저장 coinone_flag error")
+        if not coinone_flag :
              break       
     data_coinone=pd.DataFrame(data_coinone['completeOrders'])
     data_coinone=data_coinone[['timestamp','price','qty']]
@@ -194,10 +197,10 @@ def data_to_file(i) :
         except :
             print("파일 저장을 위한 kraken 웹사이트 접속에서 에러 발생",a)
         try :
-            flag=pd.DataFrame(data_kraken['result']['XXBTZUSD']).empty
+            kraken_flag=pd.DataFrame(data_kraken['result']['XXBTZUSD']).empty
         except :
              print("파일 저장을 위한 kraken flag 값 에러",a)
-        if not flag :
+        if not kraken_flag :
             break
 
     data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
