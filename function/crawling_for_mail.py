@@ -6,7 +6,10 @@ import pandas as pd
 import time
 from bs4 import BeautifulSoup
 from function.mail_func import exchange, premiumFunc, mail
-#from function.savetohadoop import savetohadoop, savetohadoop_d
+from hdfs import InsecureClient
+
+
+
   
 def crawling(x='bithumb',y='poloniex') :
     url={'bithumb':"https://api.bithumb.com/public/ticker/BTC",
@@ -225,9 +228,14 @@ def json_to_file(data,coinone,i):
     i=str(i)
     filename=coinone+i
     data=pd.DataFrame(data)
-    data.to_csv('data/'+filename+'.csv')
-    #savetohadoop_d(data,filename)
-    #savetohadoop(filename)
+    #data.to_csv('data/'+filename+'.csv')
+    client_hdfs= InsecureClient('http://10.1.43.149:50070')
+    print('1')
+    #fileaddress='/coindata1'
+    filenamesave='/user/'+filename+'.csv'
+    print(filenamesave)
+    with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:data.to_csv(writer)
+
 
 
 
