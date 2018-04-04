@@ -74,7 +74,7 @@ time_exchange_data={'timestamp':[],'exchange_rate':[]}
 start_time_m=datetime.datetime.now()
 start_time_h=datetime.datetime.now()
 while True :
-    time.sleep(5)
+    time.sleep(30)
     i+=1    
     premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
     upper_bound,lower_bound=bollingerband(premium,10,5)

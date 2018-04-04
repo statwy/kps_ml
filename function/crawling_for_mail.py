@@ -224,7 +224,7 @@ def exchange_rate_to_file(exchange_data,i):
     #exchange_rate.to_csv('data/exchange_rate_'+i+'.csv') 
     client_hdfs= InsecureClient('http://10.1.43.149:50070')
     #fileaddress='/coindata1'
-    filenamesave='/user/'+filename+'.csv'
+    filenamesave='/test/'+filename+'.csv'
     print(filenamesave)
     with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:exchange_rate.to_csv(writer)
     
@@ -236,7 +236,7 @@ def json_to_file(data,coinone,i):
     #data.to_csv('data/'+filename+'.csv')
     client_hdfs= InsecureClient('http://10.1.43.149:50070')
     #fileaddress='/coindata1'
-    filenamesave='/user/'+filename+'.csv'
+    filenamesave='/coindata2/'+filename+'.csv'
     print(filenamesave)
     with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:data.to_csv(writer)
 
