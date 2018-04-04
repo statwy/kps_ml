@@ -88,8 +88,9 @@ while True :
        
         if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
             #mail_address=get_memberlist(temp)
-            mail_address=['jwy627wywy@naver.com']       
-            mail('test',mail_address)           
+            mail_address=['jwy627wywy@naver.com']
+            mail_content='현재 코리아 프리미엄'+'%d'%temp +'퍼센트 입니다'  
+            mail(mail_content,'kps 알람입니다.', mail_address)          
         setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
         
     time_for_logic_m=datetime.datetime.now()-start_time_m

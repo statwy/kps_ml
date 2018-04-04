@@ -195,7 +195,7 @@ missing_data=missing_data[['5min','premium']]
 missing_data['day']=pd.DataFrame(pd.Series(missing_data['5min']).dt.round('D'))
 missing_data=missing_data.groupby('day').count()
 del missing_data['premium']
-plt.plot(missing_data.loc['2018-01-08':'2018-03-11'])
+plt.plot(missing_data.loc['2017-04-01':'2017-05-11'])
 
 missing_data.loc['2018-01-08':'2018-03-11']
 missing_data['date']=missing_data.index
@@ -204,7 +204,7 @@ for i in range(len(missing_data)-1) :
 #    if missing_data['5min'].loc(i)>=200 :
   #      print(missing_data[i]['5min']>=200 )
 
-max(missing_data.loc['2018-01-08':'2018-03-11'])
+
 
 # data 탐색용 코드 
 temp=missing_data.loc['2014-01-08':'2014-03-15']
