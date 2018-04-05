@@ -7,7 +7,7 @@ import time
 from bs4 import BeautifulSoup
 from function.mail_func import exchange, premiumFunc, mail
 from hdfs import InsecureClient
-#from function.savetohadoop import savetohadoop, savetohadoop_d
+
   
 def crawling(x='bithumb',y='poloniex') :
     url={'bithumb':"https://api.bithumb.com/public/ticker/BTC",

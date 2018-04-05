@@ -8,53 +8,49 @@ from function.get_memberlist import get_memberlist
 import math
 import datetime
 import time
+from function.insert import insertpremium 
+from function.main_func import bollingerband, append_maxsize, gener_percentFlag, setup_percentFlag, premium_int
 
-def bollingerband(x,y=100,sigma=5) :
-    x=pd.DataFrame(x)
-    mva=x.rolling(window=y).mean()
-    mvstd=x.rolling(window=y).std()
-    upper_bound=mva+sigma*mvstd
-    lower_bound=mva-sigma*mvstd
-    return list(upper_bound[0]), list(lower_bound[0])
-
-
-def append_maxsize(x,y,z) :
-    if len(x)<z :
-        x.append(y)
-    else :
-        x.pop(0)
-        x.append(y) 
-    return x
-
-
-def gener_percentFlag(x,y) :
-    global percent_flag
-    percent_flag={}
-    percent_flag['Boll']=1
-    for i in range(x,y+1) :
-       a='p_%d' %i
-       percent_flag[a]=1
-
-def setup_percentFlag(x,y,z) :
-    for i in range(x,y+1) :
-        a='p_%d' %i
-        percent_flag[a]=1
-    b='p_%d' %z
-    percent_flag[b]=0
-    percent_flag['Boll']=0
-
-       
-def premium_int(x,y) : 
-    z= max(math.floor(x*100),math.floor(y*100))
-    return z 
-
-
-
+#def bollingerband(x,y=100,sigma=5) :
+#    x=pd.DataFrame(x)
+#    mva=x.rolling(window=y).mean()
+#    mvstd=x.rolling(window=y).std()
+#    upper_bound=mva+sigma*mvstd
+#    lower_bound=mva-sigma*mvstd
+#    return list(upper_bound[0]), list(lower_bound[0])
+#
+#
+#def append_maxsize(x,y,z) :
+#    if len(x)<z :
+#        x.append(y)
+#    else :
+#        x.pop(0)
+#        x.append(y) 
+#    return x
+#
+#
+#def gener_percentFlag(x,y) :
+#    global percent_flag
+#    percent_flag={}
+#    percent_flag['Boll']=1
+#    for i in range(x,y+1) :
+#       a='p_%d' %i
+#       percent_flag[a]=1
+#
+#def setup_percentFlag(x,y,z) :
+#    for i in range(x,y+1) :
+#        a='p_%d' %i
+#        percent_flag[a]=1
+#    b='p_%d' %z
+#    percent_flag[b]=0
+#    percent_flag['Boll']=0
+#
+#       
+#def premium_int(x,y) : 
+#    z= max(math.floor(x*100),math.floor(y*100))
+#    return z 
 
 # 초기 데이터 생성용 로직
-
-
-
 
 j=0
 premium=[]
@@ -92,8 +88,8 @@ while True :
         temp_premium='p_%d' %temp
        
         if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
-            #mail_address=get_memberlist(temp)
-            mail_address=['jwy627wywy@naver.com']
+            mail_address=get_memberlist(temp)
+            #mail_address=['jwy627wywy@naver.com']
             mail_content='현재 코리아 프리미엄'+'%d'%temp +'퍼센트 입니다'  
             mail(mail_content,'kps 알람입니다.', mail_address)          
         setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
@@ -103,27 +99,27 @@ while True :
     if time_for_logic_min.total_seconds()>30 :
         time_premiumdata['timestamp'].append(int(time.time()))
         time_premiumdata['premium'].append(premium[-1]*100)
+        insertpremium(time_premiumdata)
         start_time_min=datetime.datetime.now()
-    
+        time_premiumdata={'timestamp':[],'premium':[]}
     time_for_logic_m=datetime.datetime.now()-start_time_m
-    if time_for_logic_m.total_seconds()>360 :   
+    if time_for_logic_m.total_seconds()>36 :   
         time_exchange_data['timestamp'].append(int(time.time()))
         time_exchange_data['exchange_rate'].append(exchange())
-        time_premiumdata=pd.DataFrame(time_premiumdata)
-        
-        try :
-            time_premiumdata.to_csv('data/premium'+m+'.csv')
-            data_to_file(m)
-            
+        #df_time_premiumdata=pd.DataFrame(time_premiumdata)
+        #df_time_premiumdata.to_csv('data/premium'+str(m)+'.csv')    
+        try :         
+            data_to_file(m)         
         except :
             time.sleep(10)
             data_to_file(m)
         m+=1
+        #time_premiumdata={'timestamp':[],'premium':[]}
         start_time_m=datetime.datetime.now()
         
     time_for_logic_h=datetime.datetime.now()-start_time_h
     
-    if time_for_logic_h.total_seconds()>360*12 :
+    if time_for_logic_h.total_seconds()>36*12 :
         exchange_rate_to_file(time_exchange_data,j)
         time_exchange_data={'timestamp':[],'exchange_rate':[]} 
         start_time_h=datetime.datetime.now()
