@@ -6,7 +6,7 @@ import pandas as pd
 import time
 from bs4 import BeautifulSoup
 from function.mail_func import exchange, premiumFunc, mail
-from hdfs import InsecureClient
+#from hdfs import InsecureClient
 
   
 def crawling(x='bithumb',y='poloniex') :
@@ -221,38 +221,38 @@ def exchange_rate_to_file(exchange_data,i):
     i=str(i)
     exchange_rate=pd.DataFrame(exchange_data)
     filename='exchange_rate_'+i
-    #exchange_rate.to_csv('data/exchange_rate_'+i+'.csv') 
-    try :
-        client_hdfs= InsecureClient('http://10.1.43.149:50070')
-        #fileaddress='/coindata1'
-        filenamesave='/test/'+filename+'.csv'
-        print(filenamesave)
-        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:exchange_rate.to_csv(writer)
-    except :
-        print("hadoop error")
-        client_hdfs= InsecureClient('http://10.1.43.149:50070')
-        #fileaddress='/coindata1'
-        filenamesave='/test/'+filename+'.csv'
-        print(filenamesave)
-        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:exchange_rate.to_csv(writer)
+    exchange_rate.to_csv('data/exchange_rate_'+i+'.csv') 
+#    try :
+#        client_hdfs= InsecureClient('http://10.1.43.149:50070')
+#        #fileaddress='/coindata1'
+#        filenamesave='/test/'+filename+'.csv'
+#        print(filenamesave)
+#        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:exchange_rate.to_csv(writer)
+#    except :
+#        print("hadoop error")
+#        client_hdfs= InsecureClient('http://10.1.43.149:50070')
+#        #fileaddress='/coindata1'
+#        filenamesave='/test/'+filename+'.csv'
+#        print(filenamesave)
+#        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:exchange_rate.to_csv(writer)
     
 def json_to_file(data,coinone,i):
     i=str(i)
     filename=coinone+i
     data=pd.DataFrame(data)
-    #data.to_csv('data/'+filename+'.csv')
-    try :
-        client_hdfs= InsecureClient('http://10.1.43.149:50070')
-        #fileaddress='/coindata1'
-        filenamesave='/coindata2/'+filename+'.csv'
-        print(filenamesave)
-        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:data.to_csv(writer)
-    except :
-        print("hadoop error")
-        #fileaddress='/coindata1'
-        filenamesave='/coindata2/'+filename+'.csv'
-        print(filenamesave)
-        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:data.to_csv(writer)
+    data.to_csv('data/'+filename+'.csv')
+#    try :
+#        client_hdfs= InsecureClient('http://10.1.43.149:50070')
+#        #fileaddress='/coindata1'
+#        filenamesave='/coindata2/'+filename+'.csv'
+#        print(filenamesave)
+#        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:data.to_csv(writer)
+#    except :
+#        print("hadoop error")
+#        #fileaddress='/coindata1'
+#        filenamesave='/coindata2/'+filename+'.csv'
+#        print(filenamesave)
+#        with client_hdfs.write(filenamesave, encoding = 'utf-8') as writer:data.to_csv(writer)
     
 #def crawling() :
 #    url_bithumb="https://api.bithumb.com/public/ticker/ALL"
