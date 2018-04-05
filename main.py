@@ -55,7 +55,7 @@ while True :
     if not math.floor(premium[-2]*100)==math.floor(premium[-1]*100) :
         temp=premium_int(premium[-2],premium[-1])
         temp_premium='p_%d' %temp
-       
+        print("temp 값 :", temp)
         if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
             mail_address=get_memberlist(temp)
             #mail_address=['jwy627wywy@naver.com']
@@ -63,7 +63,7 @@ while True :
             mail(mail_content,'kps 알람입니다. 현재 프리미엄 %d 프로!'%temp , mail_address)          
         setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
     
-    print("temp 값:",temp,"percent_flag :",percent_flag)
+    print("percent_flag 값:",percent_flag)
     time_for_logic_min=datetime.datetime.now()-start_time_min
     if time_for_logic_min.total_seconds()>3 :
         time_premiumdata['timestamp'].append(int(time.time()))
