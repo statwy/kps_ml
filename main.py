@@ -79,7 +79,7 @@ start_time_h=datetime.datetime.now()
 start_time_min=datetime.datetime.now()
 
 while True :
-    time.sleep(30)
+    time.sleep(3)
     i+=1    
     premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
     upper_bound,lower_bound=bollingerband(premium,10,5)
@@ -100,13 +100,13 @@ while True :
     
     
     time_for_logic_min=datetime.datetime.now()-start_time_min
-    if time_for_logic_min.total_seconds()>300 :
+    if time_for_logic_min.total_seconds()>30 :
         time_premiumdata['timestamp'].append(int(time.time()))
         time_premiumdata['premium'].append(premium[-1]*100)
         start_time_min=datetime.datetime.now()
     
     time_for_logic_m=datetime.datetime.now()-start_time_m
-    if time_for_logic_m.total_seconds()>3600 :   
+    if time_for_logic_m.total_seconds()>360 :   
         time_exchange_data['timestamp'].append(int(time.time()))
         time_exchange_data['exchange_rate'].append(exchange())
         time_premiumdata=pd.DataFrame(time_premiumdata)
@@ -123,7 +123,7 @@ while True :
         
     time_for_logic_h=datetime.datetime.now()-start_time_h
     
-    if time_for_logic_h.total_seconds()>3600*12 :
+    if time_for_logic_h.total_seconds()>360*12 :
         exchange_rate_to_file(time_exchange_data,j)
         time_exchange_data={'timestamp':[],'exchange_rate':[]} 
         start_time_h=datetime.datetime.now()
