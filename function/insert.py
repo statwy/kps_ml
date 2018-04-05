@@ -17,9 +17,9 @@ def insertpremium(time_premiumdata) :
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()
     
-    print(type(time_premiumdata))
-    print(type(time_premiumdata['premium']))
-    print(time_premiumdata['premium'])
+#    print(type(time_premiumdata))
+#    print(type(time_premiumdata['premium']))
+#    print(time_premiumdata['premium'])
     # SQL문 실행
     sql="insert into test values (%s,%s)"
     curs.execute(sql, (time_premiumdata['timestamp'], time_premiumdata['premium']))
