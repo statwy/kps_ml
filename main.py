@@ -9,7 +9,7 @@ import math
 import datetime
 import time
 from function.insert import insertpremium 
-from function.main_func import bollingerband, append_maxsize, setup_percentFlag, premium_int
+from function.main_func import bollingerband, append_maxsize, premium_int
 
 def gener_percentFlag(x,y) :
     global percent_flag
@@ -18,6 +18,14 @@ def gener_percentFlag(x,y) :
     for i in range(x,y+1) :
        a='p_%d' %i
        percent_flag[a]=1
+       
+def setup_percentFlag(x,y,z) :
+    for i in range(x,y+1) :
+        a='p_%d' %i
+        percent_flag[a]=1
+    b='p_%d' %z
+    percent_flag[b]=0
+    percent_flag['Boll']=0
 
 # 초기 데이터 생성용 로직
 
@@ -57,11 +65,11 @@ while True :
         temp_premium='p_%d' %temp
         print("temp 값 :", temp)
         if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
-            mail_address=get_memberlist(temp)
-            #mail_address=['jwy627wywy@naver.com']
+            #mail_address=get_memberlist(temp)
+            mail_address=['jwy627wywy@naver.com']
             mail_content='현재 코리아 프리미엄'+'%d'%temp +'퍼센트 입니다'  
             mail(mail_content,'kps 알람입니다. 현재 프리미엄 %d 프로!'%temp , mail_address)          
-        setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
+            setup_percentFlag(-10,10,temp)
     
     print("percent_flag 값:",percent_flag)
     time_for_logic_min=datetime.datetime.now()-start_time_min
@@ -82,11 +90,13 @@ while True :
         except :
             time.sleep(10)
             data_to_file('coinone',m)
-        try :         
+            
+        try :
             data_to_file('kraken',m)         
         except :
             time.sleep(10)
             data_to_file('kraken',m)        
+        
         m+=1
         #time_premiumdata={'timestamp':[],'premium':[]}
         start_time_m=datetime.datetime.now()      

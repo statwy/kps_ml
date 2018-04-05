@@ -167,7 +167,7 @@ def crawling(x='bithumb',y='poloniex') :
 
 
 # coinone, kraken data 파일로 떨구는 함수 (한시간 마다 떨구면 될듯 )
-def data_to_file(x,i) : 
+def data_to_file(y,i) : 
     now_timestamp=str(time.time()).replace(".","")+'00'
     before_hour_timestamp=str(int(now_timestamp)-3600000000000)
     url_coinone = 'https://api.coinone.co.kr/trades/?currency=btc&period=hour&format=json'
@@ -175,8 +175,7 @@ def data_to_file(x,i) :
     global coinone_flag
     global kraken_flag
     
-    if x=='coinone' :
-    
+    if y=='coinone' :
         for x in range(0,10) :
             try :
                 res_coinone=req.urlopen(url_coinone).read()
@@ -192,14 +191,13 @@ def data_to_file(x,i) :
                     break   
             except :
                 print("파일저장 coinone_flag BREAK error")
-            try :
-                data_coinone=pd.DataFrame(data_coinone['completeOrders'])
-                data_coinone=data_coinone[['timestamp','price','qty']]
-                json_to_file(data_coinone,'coinone',i)
-            except :
-                print("코인원 저장 못했습니다.")
-    if x=='kraken' :
-    
+        try :
+            data_coinone=pd.DataFrame(data_coinone['completeOrders'])
+            data_coinone=data_coinone[['timestamp','price','qty']]
+            json_to_file(data_coinone,'coinone',i)
+        except :
+            print("코인원 저장 못했습니다.")
+    elif y=='kraken' :
         for a in range(0,10) :
             try :    
                 res_kraken=req.urlopen(url_kraken).read()
@@ -215,14 +213,16 @@ def data_to_file(x,i) :
                     break
             except :
                 print("파일 저장을 위한 kraken flag 값 BREAK 에러",a)
-            try :
-                data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
-                data_kraken=data_kraken[[2,0,1]]
-                data_kraken.columns=['timestamp','price','qty']
-                json_to_file(data_kraken,'kraken',i)
-            except :
-                print("크라켄 저장 못했습니다.")
-
+        try :
+            data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
+            data_kraken=data_kraken[[2,0,1]]
+            data_kraken.columns=['timestamp','price','qty']
+            json_to_file(data_kraken,'kraken',i)
+        except :
+            print("크라켄 저장 못했습니다.")
+    else :
+        print("잘못된 parameter")
+        
 def exchange_rate_to_file(exchange_data,i):
     i=str(i)
     exchange_rate=pd.DataFrame(exchange_data)

@@ -29,7 +29,6 @@ def gener_percentFlag(x,y) :
        percent_flag[a]=1
 
 def setup_percentFlag(x,y,z) :
-    gener_percentFlag(x,y)
     for i in range(x,y+1) :
         a='p_%d' %i
         percent_flag[a]=1
