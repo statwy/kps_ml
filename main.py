@@ -63,7 +63,7 @@ while True :
             mail(mail_content,'kps 알람입니다. 현재 프리미엄 %d 프로!'%temp , mail_address)          
         setup_percentFlag(-10,10,premium_int(premium[-2],premium[-1]))
     
-    
+    print("temp 값:",temp,"percent_flag :",percent_flag)
     time_for_logic_min=datetime.datetime.now()-start_time_min
     if time_for_logic_min.total_seconds()>3 :
         time_premiumdata['timestamp'].append(int(time.time()))
