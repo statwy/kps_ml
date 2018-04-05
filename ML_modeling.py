@@ -45,7 +45,6 @@ bollingerband(data['K_price'],100,2)
 
 
 
-
 def bollingerband(x,y=100,sigma=2) :
     x=pd.DataFrame(x)
     mva=x.rolling(window=y).mean()
@@ -79,7 +78,7 @@ def RSI(ohlc, n=14):
     AD = D.rolling(window=n).mean()
 
     return 100 * AU / (AU + AD)
-    
+
     
 
 

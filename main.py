@@ -78,16 +78,19 @@ while True :
         #df_time_premiumdata=pd.DataFrame(time_premiumdata)
         #df_time_premiumdata.to_csv('data/premium'+str(m)+'.csv')    
         try :         
-            data_to_file(m)         
+            data_to_file('coinone',m)         
         except :
             time.sleep(10)
-            data_to_file(m)
+            data_to_file('coinone',m)
+        try :         
+            data_to_file('kraken',m)         
+        except :
+            time.sleep(10)
+            data_to_file('kraken',m)        
         m+=1
         #time_premiumdata={'timestamp':[],'premium':[]}
-        start_time_m=datetime.datetime.now()
-        
+        start_time_m=datetime.datetime.now()      
     time_for_logic_h=datetime.datetime.now()-start_time_h
-    
     if time_for_logic_h.total_seconds()>36*12 :
         exchange_rate_to_file(time_exchange_data,j)
         time_exchange_data={'timestamp':[],'exchange_rate':[]} 

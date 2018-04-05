@@ -167,55 +167,61 @@ def crawling(x='bithumb',y='poloniex') :
 
 
 # coinone, kraken data 파일로 떨구는 함수 (한시간 마다 떨구면 될듯 )
-def data_to_file(i) : 
+def data_to_file(x,i) : 
     now_timestamp=str(time.time()).replace(".","")+'00'
     before_hour_timestamp=str(int(now_timestamp)-3600000000000)
     url_coinone = 'https://api.coinone.co.kr/trades/?currency=btc&period=hour&format=json'
     url_kraken = 'https://api.kraken.com/0/public/Trades?pair=XBTUSD&since='+before_hour_timestamp # since 값을 한시간씩 옮기면 될듯.
     global coinone_flag
     global kraken_flag
- 
-    for x in range(0,10) :
-        try :
-            res_coinone=req.urlopen(url_coinone).read()
-            data_coinone=json.loads(res_coinone.decode('utf-8'))
-        except :
-            print("파일 저장을 위한 코인원 웹사이트 접속에서 에러 발생",x)
-        try :
-            coinone_flag=pd.DataFrame(data_coinone).empty
-        except :
-            print("파일저장 coinone_flag error")
-        try :
-            if not coinone_flag :
-                break   
-        except :
-            print("파일저장 coinone_flag BREAK error")
-          
-    data_coinone=pd.DataFrame(data_coinone['completeOrders'])
-    data_coinone=data_coinone[['timestamp','price','qty']]
-    json_to_file(data_coinone,'coinone',i)
-
-    for a in range(0,10) :
-        try :    
-            res_kraken=req.urlopen(url_kraken).read()
-            data_kraken=json.loads(res_kraken.decode('utf-8'))
-        except :
-            print("파일 저장을 위한 kraken 웹사이트 접속에서 에러 발생",a)
-        try :
-            kraken_flag=pd.DataFrame(data_kraken['result']['XXBTZUSD']).empty
-        except :
-            print("파일 저장을 위한 kraken flag 값 에러",a)
-        try :     
-            if not kraken_flag :
-                break
-        except :
-            print("파일 저장을 위한 kraken flag 값 BREAK 에러",a)
-   
-    data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
-    data_kraken=data_kraken[[2,0,1]]
-    data_kraken.columns=['timestamp','price','qty']
-    json_to_file(data_kraken,'kraken',i)
-
+    
+    if x=='coinone' :
+    
+        for x in range(0,10) :
+            try :
+                res_coinone=req.urlopen(url_coinone).read()
+                data_coinone=json.loads(res_coinone.decode('utf-8'))
+            except :
+                print("파일 저장을 위한 코인원 웹사이트 접속에서 에러 발생",x)
+            try :
+                coinone_flag=pd.DataFrame(data_coinone).empty
+            except :
+                print("파일저장 coinone_flag error")
+            try :
+                if not coinone_flag :
+                    break   
+            except :
+                print("파일저장 coinone_flag BREAK error")
+            try :
+                data_coinone=pd.DataFrame(data_coinone['completeOrders'])
+                data_coinone=data_coinone[['timestamp','price','qty']]
+                json_to_file(data_coinone,'coinone',i)
+            except :
+                print("코인원 저장 못했습니다.")
+    if x=='kraken' :
+    
+        for a in range(0,10) :
+            try :    
+                res_kraken=req.urlopen(url_kraken).read()
+                data_kraken=json.loads(res_kraken.decode('utf-8'))
+            except :
+                print("파일 저장을 위한 kraken 웹사이트 접속에서 에러 발생",a)
+            try :
+                kraken_flag=pd.DataFrame(data_kraken['result']['XXBTZUSD']).empty
+            except :
+                print("파일 저장을 위한 kraken flag 값 에러",a)
+            try :     
+                if not kraken_flag :
+                    break
+            except :
+                print("파일 저장을 위한 kraken flag 값 BREAK 에러",a)
+            try :
+                data_kraken=pd.DataFrame(data_kraken['result']['XXBTZUSD'])
+                data_kraken=data_kraken[[2,0,1]]
+                data_kraken.columns=['timestamp','price','qty']
+                json_to_file(data_kraken,'kraken',i)
+            except :
+                print("크라켄 저장 못했습니다.")
 
 def exchange_rate_to_file(exchange_data,i):
     i=str(i)
