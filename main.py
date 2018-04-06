@@ -31,10 +31,10 @@ def setup_percentFlag(x,y,z) :
 
 j=0
 premium=[]
-for j in range(0,10) : 
+for j in range(0,500) : 
     premium.append(crawling('bithumb','poloniex'))
     j+=1
-upper_bound,lower_bound=bollingerband(premium,10,5)
+upper_bound,lower_bound=bollingerband(premium,500,3)
 
 
 print('##### 메일 보내는 로직 시작 #####')
@@ -53,10 +53,10 @@ start_time_min=datetime.datetime.now()
 
 while True :
     try :
-        time.sleep(3)
+        time.sleep(10)
         i+=1    
-        premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
-        upper_bound,lower_bound=bollingerband(premium,10,5)
+        premium=append_maxsize(premium,crawling('bithumb','poloniex'),5000)
+        upper_bound,lower_bound=bollingerband(premium,500,5)
         
         if not lower_bound[-1] < crawling('bithumb','poloniex') < upper_bound[-1]:
             percent_flag['Boll']=1
@@ -74,14 +74,14 @@ while True :
         
         #print("percent_flag 값:",percent_flag)
         time_for_logic_min=datetime.datetime.now()-start_time_min
-        if time_for_logic_min.total_seconds()>3 :
+        if time_for_logic_min.total_seconds()>300 :
             time_premiumdata['timestamp'].append(int(time.time()))
             time_premiumdata['premium'].append(premium[-1]*100)
             insertpremium(time_premiumdata) # DB 에 프리미엄 넣기
             start_time_min=datetime.datetime.now()
             time_premiumdata={'timestamp':[],'premium':[]}
         time_for_logic_m=datetime.datetime.now()-start_time_m
-        if time_for_logic_m.total_seconds()>36 :   
+        if time_for_logic_m.total_seconds()>3600 :   
             time_exchange_data['timestamp'].append(int(time.time()))
             time_exchange_data['exchange_rate'].append(exchange())
             #df_time_premiumdata=pd.DataFrame(time_premiumdata)
@@ -102,7 +102,7 @@ while True :
             #time_premiumdata={'timestamp':[],'premium':[]}
             start_time_m=datetime.datetime.now()      
         time_for_logic_h=datetime.datetime.now()-start_time_h
-        if time_for_logic_h.total_seconds()>36*12 :
+        if time_for_logic_h.total_seconds()>3600*12 :
             exchange_rate_to_file(time_exchange_data,j)
             time_exchange_data={'timestamp':[],'exchange_rate':[]} 
             start_time_h=datetime.datetime.now()
