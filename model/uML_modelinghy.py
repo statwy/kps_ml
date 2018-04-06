@@ -14,14 +14,16 @@ from pandas.plotting import scatter_matrix
 import datetime
 
 data=pd.read_csv("data/data_refined.csv")
-data=data[['5min_0','K_price','K_volume','K_count','Ex_rate','premium']]
+data=data[['5min_0','Adj_U_price','U_volume','U_count','Ex_rate','premium']]
 data.index=data['5min_0']
 
-ft =KgetFeatureSet(data, u=0.8, d=-0.7, period=20)
+ft =UgetFeatureSet(data, u=0.8, d=-0.7, period=20)
 ft.tail(10)
 
+#ft.to_csv("data/u_featureset01.csv")
+
 # DATA > KDATA 로부터 Feature Set을 구성한다
-def KgetFeatureSet(data, u, d, period):
+def UgetFeatureSet(data, u, d, period):
     
       
     # Feature value를 계산한 후 Z-score Normalization 한다
@@ -32,20 +34,20 @@ def KgetFeatureSet(data, u, d, period):
     #fparkinson = scale(ParkinsonVol(data, 10))
     vol = scale(CloseVol(data, 10))
     
-    kft = pd.DataFrame()
-    kft['kmacd'] = macd
-    kft['krsi'] = rsi
-    kft['kobv'] = obv
+    uft = pd.DataFrame()
+    uft['umacd'] = macd
+    uft['ursi'] = rsi
+    uft['uobv'] = obv
     #kft['liquidity'] = fliquidity
     #kft['parkinson'] = fparkinson
-    kft['kvolatility'] = vol
-    kft['kclass'] = getUpDnClass(data, u, d, period)
-    kft = kft.dropna()
+    uft['uvolatility'] = vol
+    uft['uclass'] = getUpDnClass(data, u, d, period)
+    uft = uft.dropna()
     
     # Feature들의 value (수준) 보다는 방향 (up, down)을 분석하는 것이 의미가 있어 보임.
     # 방향을 어떻게 검출할 지는 향후 연구 과제로 한다
 
-    return kft
+    return uft
 
 # Supervised Learning을 위한 class를 부여한다
 # 
@@ -58,9 +60,9 @@ def getUpDnClass(data, up, dn, period):
     # 주가 수익률의 표준편차를 측정한다
     r = []
     for curr, prev in zip(data.itertuples(), data.shift(1).itertuples()):
-        if math.isnan(prev.K_price):
+        if math.isnan(prev.Adj_U_price):
             continue
-        r.append(np.log(curr.K_price / prev.K_price))
+        r.append(np.log(curr.Adj_U_price / prev.Adj_U_price))
     s = np.std(r)
     
     # 목표 수익률과 손절률을 계산한다
@@ -71,12 +73,12 @@ def getUpDnClass(data, up, dn, period):
     rclass = []
     for i in range(len(data) - 1):
         # 매수 포지션을 취한다
-        buyPrc = data.iloc[i].K_price
+        buyPrc = data.iloc[i].Adj_U_price
         y = np.nan
             
         # 매수 포지션 이후 청산 지점을 결정한다
         for k in range(i+1, len(data)):
-            sellPrc = data.iloc[k].K_price
+            sellPrc = data.iloc[k].Adj_U_price
             
             # 수익률을 계산한다
             rtn = np.log(sellPrc / buyPrc)
@@ -106,8 +108,8 @@ def getUpDnClass(data, up, dn, period):
 # MACD oscilator : MACD Line - Signal Line
 # ----------------------------------------
 def MACD(data, nFast=12, nSlow=26, nSig=9, percent=True):
-    ema1 = EMA(data.K_price, nFast)
-    ema2 = EMA(data.K_price, nSlow)
+    ema1 = EMA(data.Adj_U_price, nFast)
+    ema2 = EMA(data.Adj_U_price, nSlow)
     
     if percent:
         macdLine =  100 * (ema1 - ema2) / ema2
@@ -157,7 +159,7 @@ def EMA(data, n):
 # smoothed RS는 고려하지 않았음.
 # --------------------------------------------------------
 def RSI(data, n=14):
-    price = pd.DataFrame(data.K_price)
+    price = pd.DataFrame(data.Adj_U_price)
     U = np.where(price.diff(1) > 0, price.diff(1), 0)
     D = np.where(price.diff(1) < 0, price.diff(1) * (-1), 0)
     
@@ -183,40 +185,40 @@ def OBV(data, ext=True):
             if math.isnan(prev.K_volume):
                 continue
             
-            if curr.K_price > prev.K_price:
-                obv.append(obv[-1] + curr.K_volume)
-            if curr.K_price < prev.K_price:
-                obv.append(obv[-1] - curr.K_volume)
-            if curr.K_price == prev.K_price:
+            if curr.Adj_U_price > prev.Adj_U_price:
+                obv.append(obv[-1] + curr.U_volume)
+            if curr.Adj_U_price < prev.Adj_U_price:
+                obv.append(obv[-1] - curr.U_volume)
+            if curr.Adj_U_price == prev.Adj_U_price:
                 obv.append(obv[-1])
     # Extendedd OBV
     else:
         # 가격 변화를 측정한다. 가격 변화 = 금일 종가 - 전일 종가
-        deltaPrice = data['K_price'].diff(1)
+        deltaPrice = data['Adj_U_price'].diff(1)
         deltaPrice = deltaPrice.dropna(axis = 0)
         
         # 가격 변화의 표준편차를 측정한다
         stdev = np.std(deltaPrice)
         
         for curr, prev in zip(data.itertuples(), data.shift(1).itertuples()):
-            if math.isnan(prev.K_price):
+            if math.isnan(prev.Adj_U_price):
                 continue
             
-            buy = curr.K_volume * norm.cdf((curr.K_price - prev.K_price) / stdev)
-            sell = curr.K_volume - buy
+            buy = curr.U_volume * norm.cdf((curr.Adj_U_price - prev.Adj_U_price) / stdev)
+            sell = curr.U_volume - buy
             bs = abs(buy - sell)
             
-            if curr.K_price > prev.K_price:
+            if curr.Adj_U_price > prev.Adj_U_price:
                 obv.append(obv[-1] + bs)
-            if curr.K_price < prev.K_price:
+            if curr.Adj_U_price < prev.Adj_U_price:
                 obv.append(obv[-1] - bs)
-            if curr.K_price == prev.K_price:
+            if curr.Adj_U_price == prev.Adj_U_price:
                 obv.append(obv[-1])
         
     return pd.DataFrame(obv, index=data.index)
 
 def CloseVol(data, n):
-    rtn = pd.DataFrame(data['K_price']).apply(lambda x: np.log(x) - np.log(x.shift(1)))
+    rtn = pd.DataFrame(data['Adj_U_price']).apply(lambda x: np.log(x) - np.log(x.shift(1)))
     vol = pd.DataFrame(rtn).rolling(window=n).std()
 
     return pd.DataFrame(vol, index=data.index)
