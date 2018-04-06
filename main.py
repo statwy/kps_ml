@@ -66,8 +66,8 @@ while True :
             temp_premium='p_%d' %temp
             print("temp 값 :", temp)
             if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
-                #mail_address=get_memberlist(temp)
-                mail_address=['jwy627@naver.com']
+                mail_address=get_memberlist(temp)
+                #mail_address=['jwy627@naver.com']
                 mail_content='현재 코리아 프리미엄'+'%d'%temp +'퍼센트 입니다'  
                 mail(mail_content,'kps 알람입니다. 현재 프리미엄 %d 프로!'%temp , mail_address)          
                 setup_percentFlag(-10,10,temp)
