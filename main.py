@@ -52,61 +52,63 @@ start_time_h=datetime.datetime.now()
 start_time_min=datetime.datetime.now()
 
 while True :
-    time.sleep(3)
-    i+=1    
-    premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
-    upper_bound,lower_bound=bollingerband(premium,10,5)
-    
-    if not lower_bound[-1] < crawling('bithumb','poloniex') < upper_bound[-1]:
-        percent_flag['Boll']=1
-                
-    if not math.floor(premium[-2]*100)==math.floor(premium[-1]*100) :
-        temp=premium_int(premium[-2],premium[-1])
-        temp_premium='p_%d' %temp
-        print("temp 값 :", temp)
-        if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
-            #mail_address=get_memberlist(temp)
-            mail_address=['jwy627@naver.com']
-            mail_content='현재 코리아 프리미엄'+'%d'%temp +'퍼센트 입니다'  
-            mail(mail_content,'kps 알람입니다. 현재 프리미엄 %d 프로!'%temp , mail_address)          
-            setup_percentFlag(-10,10,temp)
-    
-    #print("percent_flag 값:",percent_flag)
-    time_for_logic_min=datetime.datetime.now()-start_time_min
-    if time_for_logic_min.total_seconds()>3 :
-        time_premiumdata['timestamp'].append(int(time.time()))
-        time_premiumdata['premium'].append(premium[-1]*100)
-        insertpremium(time_premiumdata) # DB 에 프리미엄 넣기
-        start_time_min=datetime.datetime.now()
-        time_premiumdata={'timestamp':[],'premium':[]}
-    time_for_logic_m=datetime.datetime.now()-start_time_m
-    if time_for_logic_m.total_seconds()>36 :   
-        time_exchange_data['timestamp'].append(int(time.time()))
-        time_exchange_data['exchange_rate'].append(exchange())
-        #df_time_premiumdata=pd.DataFrame(time_premiumdata)
-        #df_time_premiumdata.to_csv('data/premium'+str(m)+'.csv')    
-        try :         
-            data_to_file('coinone',m)         
-        except :
-            time.sleep(10)
-            data_to_file('coinone',m)
-            
-        try :
-            data_to_file('kraken',m)         
-        except :
-            time.sleep(10)
-            data_to_file('kraken',m)        
+    try :
+        time.sleep(3)
+        i+=1    
+        premium=append_maxsize(premium,crawling('bithumb','poloniex'),1000)
+        upper_bound,lower_bound=bollingerband(premium,10,5)
         
-        m+=1
-        #time_premiumdata={'timestamp':[],'premium':[]}
-        start_time_m=datetime.datetime.now()      
-    time_for_logic_h=datetime.datetime.now()-start_time_h
-    if time_for_logic_h.total_seconds()>36*12 :
-        exchange_rate_to_file(time_exchange_data,j)
-        time_exchange_data={'timestamp':[],'exchange_rate':[]} 
-        start_time_h=datetime.datetime.now()
-        j+=1
-    
+        if not lower_bound[-1] < crawling('bithumb','poloniex') < upper_bound[-1]:
+            percent_flag['Boll']=1
+                    
+        if not math.floor(premium[-2]*100)==math.floor(premium[-1]*100) :
+            temp=premium_int(premium[-2],premium[-1])
+            temp_premium='p_%d' %temp
+            print("temp 값 :", temp)
+            if percent_flag['Boll']==1 or percent_flag[temp_premium]==1  :
+                #mail_address=get_memberlist(temp)
+                mail_address=['jwy627@naver.com']
+                mail_content='현재 코리아 프리미엄'+'%d'%temp +'퍼센트 입니다'  
+                mail(mail_content,'kps 알람입니다. 현재 프리미엄 %d 프로!'%temp , mail_address)          
+                setup_percentFlag(-10,10,temp)
+        
+        #print("percent_flag 값:",percent_flag)
+        time_for_logic_min=datetime.datetime.now()-start_time_min
+        if time_for_logic_min.total_seconds()>3 :
+            time_premiumdata['timestamp'].append(int(time.time()))
+            time_premiumdata['premium'].append(premium[-1]*100)
+            insertpremium(time_premiumdata) # DB 에 프리미엄 넣기
+            start_time_min=datetime.datetime.now()
+            time_premiumdata={'timestamp':[],'premium':[]}
+        time_for_logic_m=datetime.datetime.now()-start_time_m
+        if time_for_logic_m.total_seconds()>36 :   
+            time_exchange_data['timestamp'].append(int(time.time()))
+            time_exchange_data['exchange_rate'].append(exchange())
+            #df_time_premiumdata=pd.DataFrame(time_premiumdata)
+            #df_time_premiumdata.to_csv('data/premium'+str(m)+'.csv')    
+            try :         
+                data_to_file('coinone',m)         
+            except :
+                time.sleep(10)
+                data_to_file('coinone',m)
+                
+            try :
+                data_to_file('kraken',m)         
+            except :
+                time.sleep(10)
+                data_to_file('kraken',m)        
+            
+            m+=1
+            #time_premiumdata={'timestamp':[],'premium':[]}
+            start_time_m=datetime.datetime.now()      
+        time_for_logic_h=datetime.datetime.now()-start_time_h
+        if time_for_logic_h.total_seconds()>36*12 :
+            exchange_rate_to_file(time_exchange_data,j)
+            time_exchange_data={'timestamp':[],'exchange_rate':[]} 
+            start_time_h=datetime.datetime.now()
+            j+=1
+    except :
+        print("전체 로직 에러 ")
 #    if i==2000 :
 #        break
 
