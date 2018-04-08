@@ -2,7 +2,7 @@
 import pandas as pd 
 import matplotlib.pyplot as plt
 import numpy as np
-from pandas.plotting import scatter_matrix
+#from pandas.plotting import scatter_matrix
 import datetime
 import math
 from scipy.stats import norm
