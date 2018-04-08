@@ -33,21 +33,21 @@ accuracy = 100 * (trainY == predY).sum() / len(predY)
 print("* 학습용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
 
 # k를 변화시켜가면서 정확도를 측정해 본다
-#testAcc = []
-#trainAcc = []
-#for k in range(5, 100):
-#    # KNN 으로 Train 데이터 세트를 학습한다.
-#    knn = KNeighborsClassifier(n_neighbors=k, p=2, metric='minkowski')
-#    knn.fit(trainX, trainY)
-#    
-#    # Test 세트의 Feature에 대한 정확도
-#    predY = knn.predict(testX)
-#    testAcc.append((testY == predY).sum() / len(predY))
-#    print('testAcc:',testAcc,'K:',k)
-#    # Train 세트의 Feature에 대한 정확도
-#    predY = knn.predict(trainX)
-#    trainAcc.append((trainY == predY).sum() / len(predY))
-#    print('trainAcc:',trainAcc,'K:',k)
+testAcc = []
+trainAcc = []
+for k in range(5, 100):
+    # KNN 으로 Train 데이터 세트를 학습한다.
+    knn = KNeighborsClassifier(n_neighbors=k, p=2, metric='minkowski')
+    knn.fit(trainX, trainY)
+    
+    # Test 세트의 Feature에 대한 정확도
+    predY = knn.predict(testX)
+    testAcc.append((testY == predY).sum() / len(predY))
+    print('testAcc:',testAcc,'K:',k)
+    # Train 세트의 Feature에 대한 정확도
+    predY = knn.predict(trainX)
+    trainAcc.append((trainY == predY).sum() / len(predY))
+    print('trainAcc:',trainAcc,'K:',k)
 #plt.figure(figsize=(8, 5))
 #plt.plot(testAcc, label="Test Data")
 #plt.plot(trainAcc, label="Train Data")
