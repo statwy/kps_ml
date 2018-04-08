@@ -43,11 +43,11 @@ for k in range(5, 100):
     # Test 세트의 Feature에 대한 정확도
     predY = knn.predict(testX)
     testAcc.append((testY == predY).sum() / len(predY))
-    print('testAcc:',testAcc,'K:',k)
+    print('testAcc:',testAcc[-1]*100,'K:',k)
     # Train 세트의 Feature에 대한 정확도
     predY = knn.predict(trainX)
     trainAcc.append((trainY == predY).sum() / len(predY))
-    print('trainAcc:',trainAcc,'K:',k)
+    print('trainAcc:',trainAcc[-1]*100,'K:',k)
 #plt.figure(figsize=(8, 5))
 #plt.plot(testAcc, label="Test Data")
 #plt.plot(trainAcc, label="Train Data")

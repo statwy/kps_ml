@@ -34,7 +34,7 @@ km = KMeans(n_clusters=k, init='random', n_init=10, max_iter=300, tol=1e-04, ran
 km = km.fit(ft)
 y_km = km.predict(ft)
 ft['cluster'] = y_km
-data_for_kmeans=pd.to_csv("data/kmeansdata.csv")
+ft.to_csv("data/kmeansdata.csv")
 ## Centroid pattern을 그린다
 #fig = plt.figure(figsize=(10, 6))
 #for i in range(k):
