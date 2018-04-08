@@ -58,8 +58,8 @@ data['bollinger_price_k_and_u']=data['bollinger_price_k']-data['bollinger_price_
 
 #a=getUpDnClass(data_for_knn, 0.8, -0.8,20)
 
-data.describe()
-data.corr()
+#data.describe()
+#data.corr()
 #plt.plot(data['premium'])
 #data.corr()
 #data['premium'].hist()
@@ -101,19 +101,19 @@ for i in range(0,97422) :
         data_for_knn['pre_class'].iloc[i]=temp
         print(min_val," ",max_val, "temp:", temp)
     except :
-        data_for_knn['pre_class'].iloc[i]=''
-    
-    
-    
+        data_for_knn['pre_class'].iloc[i]='Nan'
+
+data_for_knn=data_for_knn['2017-04-01 00:00:00':'2018-03-12 23:55:00']
+data_for_knn.to_csv("data/knndata.csv") 
 #    data11=data_for_knn['day']==nextday    
 #    data_for_knn['flag']=data11
 #    data_for_knn['premium'].groupby(data_for_knn['flag']).max().loc[True]
 #    data_for_knn['premium'].groupby(data_for_knn['flag']).min().loc[True]
 #        
-data_for_knn=data_for_knn['2017-04-01 00:00:00':'2018-03-12 23:55:00']
-plt.hist(data_for_knn['pre_class'])
-plt.show()
-data_for_knn.to_csv("data/knndata.csv")
+
+#plt.hist(data_for_knn['pre_class'])
+#plt.show()
+
 #
 ## Train 데이터 세트와 Test 데이터 세트를 구성한다
 #x = data_for_knn.iloc[:, 0:6]
