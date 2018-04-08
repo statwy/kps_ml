@@ -5,10 +5,10 @@ import numpy as np
 #from pandas.plotting import scatter_matrix
 import datetime
 import math
-from scipy.stats import norm
-from scipy import ndimage
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
+#from scipy.stats import norm
+#from scipy import ndimage
+#from sklearn.model_selection import train_test_split
+#from sklearn.neighbors import KNeighborsClassifier
 
 
 def bollingerband(x,y=100,sigma=2) :
