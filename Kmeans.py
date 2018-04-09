@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import pandas as pd 
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from keras.models import Sequential
 from keras.layers import Dense, SimpleRNN
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from keras.layers import LSTM
 
+print("kmeans 시작")
 
 def getClosePattern(data, n):
     loc = tuple(range(1, len(data) - n, 20))    
@@ -42,6 +43,22 @@ km = km.fit(ft)
 y_km = km.predict(ft)
 ft['cluster'] = y_km
 print("kmeans 완료")
+
+
+#########################################
+
+#test=pd.read_csv("data/test.csv")
+#test_cluster=getClosePattern(test,n=120)
+#y_t=km.predict(test_cluster)
+
+
+
+#########################################
+
+
+
+
+
 #ft.to_csv("data/kmeansdata.csv")
 
 # Centroid pattern을 그린다
