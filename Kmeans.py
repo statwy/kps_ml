@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from keras.layers import LSTM
 
 print("kmeans 시작")
-
+#
 def getClosePattern(data, n):
     loc = tuple(range(1, len(data) - n, 20))    
     column = [str(e) for e in range(1, (n+1))]
