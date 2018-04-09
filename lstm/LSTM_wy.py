@@ -34,7 +34,7 @@ def TrainDataSet(data, prior=1):
     return trainX, trainY
 
 # 10개 데이터의 시퀀스로 다음 번 시계열을 예측함.
-nPrior = 1152
+nPrior = 864
 
 # 학습 데이터와 목표값 생성
 data11= data['premium'].values
@@ -42,13 +42,13 @@ trainX, trainY = TrainDataSet(data11, nPrior)
 
 # RNN 모델 빌드 및 fitting
 model = Sequential()
-model.add(LSTM(100, input_shape=(1,nPrior)))
+model.add(LSTM(1000, input_shape=(1,nPrior)))
 model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')
-history = model.fit(trainX, trainY, batch_size=100, epochs = 200)
+history = model.fit(trainX, trainY, batch_size=200, epochs = 50)
 
 # 향후 10 기간 데이터를 예측한다
-nFuture = 288
+nFuture = 100
 dx = np.copy(data11)
 estimate = [dx[-1]]
 for i in range(nFuture):
@@ -66,14 +66,17 @@ for i in range(nFuture):
     dx = np.insert(dx, len(dx), y)
 
 # 원 시계열의 마지막 부분 100개와 예측된 시계열을 그린다
-dtail = data11[-100:]
-ax1 = np.arange(1, len(dtail) + 1)
-ax2 = np.arange(len(dtail), len(dtail) + len(estimate))
-plt.figure(figsize=(8, 7))
-plt.plot(ax1, dtail, color='blue', label='Spread', linewidth=1)
-plt.plot(ax2, estimate, color='red', label='Estimate')
-plt.axvline(x=ax1[-1],  linestyle='dashed', linewidth=1)
-plt.title('Spread & Estimate')
-plt.legend()
-plt.show()
+print(estimate)
+
+
+#dtail = data11[-100:]
+#ax1 = np.arange(1, len(dtail) + 1)
+#ax2 = np.arange(len(dtail), len(dtail) + len(estimate))
+#plt.figure(figsize=(8, 7))
+#plt.plot(ax1, dtail, color='blue', label='Spread', linewidth=1)
+#plt.plot(ax2, estimate, color='red', label='Estimate')
+#plt.axvline(x=ax1[-1],  linestyle='dashed', linewidth=1)
+#plt.title('Spread & Estimate')
+#plt.legend()
+#plt.show()
 
