@@ -41,6 +41,7 @@ km = KMeans(n_clusters=k, init='random', n_init=10, max_iter=500, tol=1e-04, ran
 km = km.fit(ft)
 y_km = km.predict(ft)
 ft['cluster'] = y_km
+print("kmeans 완료")
 #ft.to_csv("data/kmeansdata.csv")
 
 # Centroid pattern을 그린다
@@ -123,7 +124,7 @@ one_hot_vec_size=Y.shape[1]
 
 trainX, testX, trainY, testY = train_test_split(X, Y, test_size = 0.2, random_state=None)
 
-
+print("훈련시작")
 # RNN 모델 빌드 및 fitting
 model = Sequential()
 #model.add(LSTM(128, input_shape=(nPrior,k)))
