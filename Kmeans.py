@@ -5,14 +5,14 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from keras.models import Sequential
 from keras.layers import Dense, SimpleRNN
+from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
-import numpy as np
 import matplotlib.pyplot as plt
-from keras.layers import Dense, LSTM
+from keras.layers import LSTM
 
 
 def getClosePattern(data, n):
-    loc = tuple(range(1, len(data) - n, 80))    
+    loc = tuple(range(1, len(data) - n, 20))    
     column = [str(e) for e in range(1, (n+1))]
     df = pd.DataFrame(columns=column)    
     for i in loc:       
@@ -24,49 +24,54 @@ def getClosePattern(data, n):
 
 data=pd.read_csv("data/data_refined.csv")
 data.index=data['5min_0']
-data=data.loc['2017-03-30 18:20:00' : '2018-03-13 23:05:00']
-ft = getClosePattern(data, n=280)
+data=data.loc['2014-03-30 18:20:00' : '2018-03-13 23:05:00']
+ft = getClosePattern(data, n=120)
 
  #Pattern 몇 개를 확인해 본다
-x = np.arange(280)
-plt.plot(x, ft.iloc[0])
-plt.plot(x, ft.iloc[10])
-plt.plot(x, ft.iloc[50])
-plt.show()
-print(ft.head())
+#x = np.arange(100)
+#plt.plot(x, ft.iloc[0])
+#plt.plot(x, ft.iloc[10])
+#plt.plot(x, ft.iloc[50])
+#plt.show()
+#print(ft.head())
 
 # K-means 알고리즘으로 Pattern 데이터를 8 그룹으로 분류한다 (k = 8)
-k = 8
+k = 10
 km = KMeans(n_clusters=k, init='random', n_init=10, max_iter=500, tol=1e-04, random_state=0)
 km = km.fit(ft)
 y_km = km.predict(ft)
 ft['cluster'] = y_km
-ft.to_csv("data/kmeansdata.csv")
+#ft.to_csv("data/kmeansdata.csv")
+
 # Centroid pattern을 그린다
 
-fig = plt.figure(figsize=(10, 6))
+#fig = plt.figure(figsize=(10, 6))
 
-for i in range(k):
-    s = 'pattern-' + str(i)
-    p = fig.add_subplot(2,4,i+1)
-    p.plot(km.cluster_centers_[i,:], color="rbgkmrbgkm"[i])
-    p.set_title('Cluster-' + str(i))
- 
-plt.tight_layout()
-plt.show()
+#for i in range(k):
+#    s = 'pattern-' + str(i)
+#    p = fig.add_subplot(2,4,i+1)
+#    p.plot(km.cluster_centers_[i,:], color="rbgkmrbgkm"[i])
+#    p.set_title('Cluster-' + str(i))
+# 
+#plt.tight_layout()
+#plt.show()
  
 # cluster = 0 인 패턴 몇 개만 그려본다
-cluster = 0
-plt.figure(figsize=(8, 5))
-p = ft.loc[ft['cluster'] == cluster]
-for i in range(7):
-    plt.plot(x,p.iloc[i][0:280])
-   
-plt.title('Cluster-' + str(cluster))
-plt.show()
+#cluster = 0
+#plt.figure(figsize=(8, 5))
+#p = ft.loc[ft['cluster'] == cluster]
+#for i in range(7):
+#    plt.plot(x,p.iloc[i][0:100])
+#   
+#plt.title('Cluster-' + str(cluster))
+#plt.show()
+#
+#plt.hist(ft['cluster'])
+#plt.show()
 
-plt.hist(ft['cluster'])
-plt.show()
+
+
+
 ##################################################################################################
 ##################################################################################################
 
@@ -98,7 +103,7 @@ def TrainDataSet(data, prior=1):
     trainX = np.array(x)
     trainY = np.array(y)    
     # RNN에 입력될 형식으로 변환한다. (데이터 개수, 1행 X prior 열)
-    trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+    #trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
 
     return trainX, trainY
 
@@ -107,26 +112,44 @@ nPrior =10
 data=ft['cluster'].values
 X, Y = TrainDataSet(data, nPrior)
 
+X=np.reshape(X,(len(X),nPrior,1))
+
+X=to_categorical(np.array(X))
+Y=to_categorical(np.array(Y))
+
+
+X.shape
+one_hot_vec_size=Y.shape[1]
+
 trainX, testX, trainY, testY = train_test_split(X, Y, test_size = 0.2, random_state=None)
 
 
 # RNN 모델 빌드 및 fitting
 model = Sequential()
-model.add(Dense(20, input_shape=(1,nPrior)))
-model.add(Dense(1))
-model.compile(loss='categorical_crossentropy', optimizer='rmsprop',metrics=['accuracy'])
-history = model.fit(trainX, trainY, batch_size=1, epochs =100)
+#model.add(LSTM(128, input_shape=(nPrior,k)))
+model.add(LSTM(128, input_shape=(nPrior,k)))
+model.add(Dense(one_hot_vec_size, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
+history = model.fit(trainX, trainY, batch_size=1, epochs =300)
 
 
 predY = model.predict(testX)
-accuracy = 100 * (testY == predY).sum() / len(predY)
+y_pr=[np.argmax(y, axis=None, out=None) for y in predY ]
+y_pr=np.array(y_pr)
+y_test=[np.argmax(y, axis=None, out=None) for y in testY ]
+y_test=np.array(y_test)
+accuracy = 100 * (y_test == y_pr).sum() / len(y_pr)
 print()
 print("* 시험용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
 
-# Train 세트의 Feature에 대한 class를 추정하고, 정확도를 계산한다
-predY = knn.predict(trainX)
-accuracy = 100 * (trainY == predY).sum() / len(predY)
-print("* 학습용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
+
+#predY = model.predict(trainX)
+#y_pr=[np.argmax(y, axis=None, out=None) for y in predY ]
+#y_pr=np.array(y_pr)
+#y_train=[np.argmax(y, axis=None, out=None) for y in trainY ]
+#y_train=np.array(y_test)
+#accuracy = 100 * (y_train == y_pr).sum() / len(y_pr)
+#print("* 학습용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
 
 
 
