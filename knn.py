@@ -9,8 +9,10 @@ from scipy.stats import norm
 from scipy import ndimage
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.utils import shuffle
 
 data_for_knn=pd.read_csv("data/knndata.csv")
+data_for_knn=shuffle(data_for_knn)
 print(data_for_knn['premium'].groupby(data_for_knn['pre_class']).count())
 
 x = data_for_knn.iloc[:, 3:17]
