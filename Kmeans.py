@@ -25,8 +25,8 @@ def getClosePattern(data, n):
 
 data=pd.read_csv("data/data_refined.csv")
 data.index=data['5min_0']
-data=data.loc['2014-03-30 18:20:00' : '2018-03-13 23:05:00']
-ft = getClosePattern(data, n=120)
+data=data.loc['2015-03-30 18:20:00' : '2018-03-13 23:05:00']
+ft = getClosePattern(data, n=100)
 
  #Pattern 몇 개를 확인해 본다
 #x = np.arange(100)
@@ -37,7 +37,7 @@ ft = getClosePattern(data, n=120)
 #print(ft.head())
 
 # K-means 알고리즘으로 Pattern 데이터를 8 그룹으로 분류한다 (k = 8)
-k = 10
+k = 6
 km = KMeans(n_clusters=k, init='random', n_init=10, max_iter=500, tol=1e-04, random_state=0)
 km = km.fit(ft)
 y_km = km.predict(ft)
@@ -126,21 +126,17 @@ def TrainDataSet(data, prior=1):
     return trainX, trainY
 
 
-nPrior =10
+nPrior =5
 data=ft['cluster'].values
+
 X, Y = TrainDataSet(data, nPrior)
-
 X=np.reshape(X,(len(X),nPrior,1))
-
 X=to_categorical(np.array(X))
 Y=to_categorical(np.array(Y))
 
-
-X.shape
+#X.shape
 one_hot_vec_size=Y.shape[1]
-
 trainX, testX, trainY, testY = train_test_split(X, Y, test_size = 0.2, random_state=None)
-
 print("훈련시작")
 # RNN 모델 빌드 및 fitting
 model = Sequential()
@@ -148,7 +144,7 @@ model = Sequential()
 model.add(LSTM(128, input_shape=(nPrior,k)))
 model.add(Dense(one_hot_vec_size, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
-history = model.fit(trainX, trainY, batch_size=1, epochs =300)
+history = model.fit(trainX, trainY, batch_size=1, epochs =20)
 
 
 predY = model.predict(testX)

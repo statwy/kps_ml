@@ -74,7 +74,7 @@ while True :
         
         #print("percent_flag 값:",percent_flag)
         time_for_logic_min=datetime.datetime.now()-start_time_min
-        if time_for_logic_min.total_seconds()>10 :
+        if time_for_logic_min.total_seconds()>4 :
             time_premiumdata['timestamp'].append(int(time.time()))
             print(int(time.time()))
             time_premiumdata['premium'].append(premium[-1]*100)
