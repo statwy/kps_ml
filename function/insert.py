@@ -21,7 +21,7 @@ def insertpremium(time_premiumdata) :
 #    print(type(time_premiumdata['premium']))
 #    print(time_premiumdata['premium'])
     # SQL문 실행
-    sql="insert into test values (%s,%s)"
+    sql="insert into premium values (%s,%s)"
     curs.execute(sql, (time_premiumdata['timestamp'], time_premiumdata['premium']))
     
     conn.commit()
