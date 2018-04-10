@@ -42,8 +42,15 @@ def RSI(ohlc, n=14):
 
 
 data=pd.read_csv("data/data_refined.csv")
+
+data_hy_k=pd.read_csv("data/kr_hy.csv")
+data_hy_u=pd.read_csv("data/us_hy.csv")
+
+data1=pd.merge(data_hy_k, data_hy_u, left_on='5min_0', right_on='5min_0')
+data2=pd.merge(data, data1, left_on='5min_0', right_on='5min_0')
+data=data2
 data.index=data['day']
-data=data[['day','5min_0','K_price','K_volume','K_count','U_price','Adj_U_price','U_volume','U_count','Ex_rate','premium']]
+#data=data[['day','5min_0','K_price','K_volume','K_count','U_price','Adj_U_price','U_volume','U_count','Ex_rate','premium']]
 data['RSI_k']=RSI(data.K_price)
 data['RSI_u']=RSI(data.U_price)
 data['season']=list(map(seasonality , list(data['5min_0']) ) )
@@ -54,7 +61,7 @@ data['bollinger_price_k']=(data['K_price']-data['bollinger_k_lower'])/(data['bol
 data['bollinger_price_u']=(data['U_price']-data['bollinger_u_lower'])/(data['bollinger_u_upper']-data['bollinger_u_lower'])
 data['bollinger_price_k_and_u']=data['bollinger_price_k']-data['bollinger_price_u']
 
-
+data=data.dropna()
 
 #a=getUpDnClass(data_for_knn, 0.8, -0.8,20)
 
@@ -73,24 +80,25 @@ data['bollinger_price_k_and_u']=data['bollinger_price_k']-data['bollinger_price_
 #plt.plot(data_explor.RSI_k)
 #plt.plot(data_explor.RSI_u)
 
-data=data.loc['2017-04-01 00:00:00':'2018-03-13 23:55:00']
+#data=data.loc['2017-04-01 00:00:00':'2018-03-13 23:55:00']
+#
+#data_for_knn=data[['day','5min_0', 'K_price', 'K_volume', 'K_count', 'U_price','U_volume', 'U_count', 'Ex_rate','RSI_k', 'RSI_u', 'season',
+#       'adjusted_volume','bollinger_price_k','bollinger_price_u','bollinger_price_k_and_u','premium']]
+#
+#
 
-data_for_knn=data[['day','5min_0', 'K_price', 'K_volume', 'K_count', 'U_price','U_volume', 'U_count', 'Ex_rate','RSI_k', 'RSI_u', 'season',
-       'adjusted_volume','bollinger_price_k','bollinger_price_u','bollinger_price_k_and_u','premium']]
 
-
-
-data_for_knn['pre_class']=0
+data['pre_class']=0
 #pre_class={'class':[]}
 for i in range(0,97422) :
     try :
-        nextday=pd.to_datetime(data_for_knn.iloc[i]['day'])+datetime.timedelta(days=1)
+        nextday=pd.to_datetime(data.iloc[i]['day'])+datetime.timedelta(days=1)
         nextday=nextday.strftime("%Y-%m-%d")
-        mm=data_for_knn.loc[nextday]['premium'].min()
-        mx=data_for_knn.loc[nextday]['premium'].max()
+        mm=data.loc[nextday]['premium'].min()
+        mx=data.loc[nextday]['premium'].max()
        
-        min_val=(100-data_for_knn.iloc[i]['premium'])*(1+(mm)/100)
-        max_val=(100-data_for_knn.iloc[i]['premium'])*(1+(mx)/100)
+        min_val=(100-data.iloc[i]['premium'])*(1+(mm)/100)
+        max_val=(100-data.iloc[i]['premium'])*(1+(mx)/100)
         temp=0
         if min_val<97 :
             temp=1
@@ -98,68 +106,105 @@ for i in range(0,97422) :
             temp=2
         if min_val<97 and max_val>103 :
             temp=0
-        data_for_knn['pre_class'].iloc[i]=temp
+        data['pre_class'].iloc[i]=temp
         print(min_val," ",max_val, "temp:", temp)
     except :
-        data_for_knn['pre_class'].iloc[i]='Nan'
+        data['pre_class'].iloc[i]='Nan'
 
-data_for_knn=data_for_knn['2017-04-01 00:00:00':'2018-03-12 23:55:00']
-data_for_knn.to_csv("data/knndata.csv") 
+data=data['2017-04-01 00:00:00':'2018-03-12 23:55:00']
+data.to_csv("data/knndata.csv") 
+
+
+
+
+
+
+
+
+
+
+#
+#data_for_knn['pre_class']=0
+##pre_class={'class':[]}
+#for i in range(0,97422) :
+#    try :
+#        nextday=pd.to_datetime(data_for_knn.iloc[i]['day'])+datetime.timedelta(days=1)
+#        nextday=nextday.strftime("%Y-%m-%d")
+#        mm=data_for_knn.loc[nextday]['premium'].min()
+#        mx=data_for_knn.loc[nextday]['premium'].max()
+#       
+#        min_val=(100-data_for_knn.iloc[i]['premium'])*(1+(mm)/100)
+#        max_val=(100-data_for_knn.iloc[i]['premium'])*(1+(mx)/100)
+#        temp=0
+#        if min_val<97 :
+#            temp=1
+#        if max_val>103 :
+#            temp=2
+#        if min_val<97 and max_val>103 :
+#            temp=0
+#        data_for_knn['pre_class'].iloc[i]=temp
+#        print(min_val," ",max_val, "temp:", temp)
+#    except :
+#        data_for_knn['pre_class'].iloc[i]='Nan'
+#
+#data_for_knn=data_for_knn['2017-04-01 00:00:00':'2018-03-12 23:55:00']
+#data_for_knn.to_csv("data/knndata.csv") 
+
 #    data11=data_for_knn['day']==nextday    
 #    data_for_knn['flag']=data11
 #    data_for_knn['premium'].groupby(data_for_knn['flag']).max().loc[True]
 #    data_for_knn['premium'].groupby(data_for_knn['flag']).min().loc[True]
-#        
+        
 
 #plt.hist(data_for_knn['pre_class'])
 #plt.show()
 
-#
-## Train 데이터 세트와 Test 데이터 세트를 구성한다
-#x = data_for_knn.iloc[:, 0:6]
-#y = data_for_knn['class']
-#trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.2, random_state=None)
-#
-## KNN 으로 Train 데이터 세트를 학습한다.
-#knn = KNeighborsClassifier(n_neighbors=50, p=2, metric='minkowski')
-#knn.fit(trainX, trainY)
-#
-## Test 세트의 Feature에 대한 class를 추정하고, 정확도를 계산한다
-#predY = knn.predict(testX)
-#accuracy = 100 * (testY == predY).sum() / len(predY)
-#print()
-#print("* 시험용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
-#
-## Train 세트의 Feature에 대한 class를 추정하고, 정확도를 계산한다
-#predY = knn.predict(trainX)
-#accuracy = 100 * (trainY == predY).sum() / len(predY)
-#print("* 학습용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
-#
-## k를 변화시켜가면서 정확도를 측정해 본다
-#testAcc = []
-#trainAcc = []
-#for k in range(5, 100):
-#    # KNN 으로 Train 데이터 세트를 학습한다.
-#    knn = KNeighborsClassifier(n_neighbors=k, p=2, metric='minkowski')
-#    knn.fit(trainX, trainY)
-#    
-#    # Test 세트의 Feature에 대한 정확도
-#    predY = knn.predict(testX)
-#    testAcc.append((testY == predY).sum() / len(predY))
-#    
-#    # Train 세트의 Feature에 대한 정확도
-#    predY = knn.predict(trainX)
-#    trainAcc.append((trainY == predY).sum() / len(predY))
-#
-#plt.figure(figsize=(8, 5))
-#plt.plot(testAcc, label="Test Data")
-#plt.plot(trainAcc, label="Train Data")
-#plt.legend()
-#plt.xlabel("k")
-#plt.ylabel("Accuracy")
-#plt.show()
-#
-#
+
+# Train 데이터 세트와 Test 데이터 세트를 구성한다
+x = data_for_knn.iloc[:, 0:6]
+y = data_for_knn['class']
+trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.2, random_state=None)
+
+# KNN 으로 Train 데이터 세트를 학습한다.
+knn = KNeighborsClassifier(n_neighbors=50, p=2, metric='minkowski')
+knn.fit(trainX, trainY)
+
+# Test 세트의 Feature에 대한 class를 추정하고, 정확도를 계산한다
+predY = knn.predict(testX)
+accuracy = 100 * (testY == predY).sum() / len(predY)
+print()
+print("* 시험용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
+
+# Train 세트의 Feature에 대한 class를 추정하고, 정확도를 계산한다
+predY = knn.predict(trainX)
+accuracy = 100 * (trainY == predY).sum() / len(predY)
+print("* 학습용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
+
+# k를 변화시켜가면서 정확도를 측정해 본다
+testAcc = []
+trainAcc = []
+for k in range(5, 100):
+    # KNN 으로 Train 데이터 세트를 학습한다.
+    knn = KNeighborsClassifier(n_neighbors=k, p=2, metric='minkowski')
+    knn.fit(trainX, trainY)
+    
+    # Test 세트의 Feature에 대한 정확도
+    predY = knn.predict(testX)
+    testAcc.append((testY == predY).sum() / len(predY))
+    
+    # Train 세트의 Feature에 대한 정확도
+    predY = knn.predict(trainX)
+    trainAcc.append((trainY == predY).sum() / len(predY))
+
+plt.figure(figsize=(8, 5))
+plt.plot(testAcc, label="Test Data")
+plt.plot(trainAcc, label="Train Data")
+plt.legend()
+plt.xlabel("k")
+plt.ylabel("Accuracy")
+plt.show()
+
+
 
 
 #

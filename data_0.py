@@ -9,7 +9,7 @@ from datetime import datetime as dt
 import locale
 import datetime
 
-Ex_Data=pd.read_csv("exchange_rate.csv", sep=",",header=None )
+Ex_Data=pd.read_csv("data/exchange_rate.csv", sep=",",header=None )
 K_Data=pd.read_csv("data/.korbitKRW.csv", sep="," , header=None)  
 U_Data=pd.read_csv("data/.krakenUSD.csv", sep="," , header=None) 
 
@@ -90,7 +90,7 @@ Data_final['Adj_U_price']=pd.to_numeric(Data_final['U_price'])*pd.to_numeric(Dat
 
 Data_final['premium']=((Data_final['K_price']-Data_final['Adj_U_price'])/Data_final['Adj_U_price'])*100
 temp_1min={}
-temp_1min['1min']=pd.date_range('2014-01-07 19:08:00','2018-03-13 23:05:00',freq='1min')
+temp_1min['1min']=pd.date_range('2014-01-07 19:08:00','2018-04-09 00:00:0',freq='1min')
 temp_1min=pd.DataFrame(temp_1min)
 Data_temp=pd.merge(Data_final, temp_1min, left_on='time', right_on='1min',how='right')
 Data_temp=Data_temp.sort_values(by=['1min'])

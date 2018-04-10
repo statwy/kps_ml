@@ -5,10 +5,10 @@ import pandas as pd
 
 def realDataSet(data, prior=1):
     x= []
-    for i in range(len(data)-prior):
+    for i in range(len(data)-prior+1):
         a = data[i:(i+prior)]
         x.append(a)
-    trainX = np.array(x)   
+    trainX = np.array(x) 
     return trainX
 
 
@@ -42,6 +42,6 @@ def TrainDataSet(data, prior=1):
 
 def timestamp_gener(n,x) : #=time_premiumdata['timestamp'][-1]) : 
     time=[]
-    for i in n :
-        time.append(x+60*i)
+    for i in range(0,n) :
+        time.append(x+360*i)
     return time
