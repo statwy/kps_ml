@@ -56,7 +56,7 @@ temp_5min['5min']=pd.date_range('2014-01-07 19:05:00','2018-03-13 23:05:00',freq
 temp_5min=pd.DataFrame(temp_5min)
 Data_temp=pd.merge(Data_refined_f, temp_5min, left_on='5min_0', right_on='5min',how='right')
 Data_refined_non_f=Data_temp
-Data_refined_non_f['day']=pd.to_datetime(Data_refined_non['day'])
+Data_refined_non_f['day']=pd.to_datetime(Data_refined_non_f['day'])
 
 ##del Data_refined_non['day_ts']
 
@@ -113,12 +113,12 @@ tmp_k_first_Price=pd.DataFrame(tmp_k_first_Price)
 tmp_U_firstPrice=Data_refined_f[['Adj_U_price','day_1']].groupby(Data_refined_f['day_1']).head(1)
 tmp_U_firstPrice=pd.DataFrame(tmp_U_firstPrice)
 
-del K_priceInfo
+#del K_priceInfo
 K_priceInfo=tmp_K_price_Drift
 K_priceInfo=pd.merge(K_priceInfo,tmp_k_first_Price, on="day_1")
 K_priceInfo=pd.merge(K_priceInfo,tmp_K_price_Volatility, on="day_1")
 
-del U_priceInfo
+#del U_priceInfo
 U_priceInfo=tmp_Adj_U_price_Drift
 U_priceInfo=pd.merge(U_priceInfo,tmp_U_firstPrice, on="day_1")
 U_priceInfo=pd.merge(U_priceInfo,tmp_Adj_U_price_Volatility, on="day_1")
@@ -176,7 +176,7 @@ U_priceInfo=pd.merge(U_priceInfo, Day_Count, on="day_1")
 #    sampleK_price.append(price)
 #len(sampleK_price)
 #
-del sample_K_price
+#del sample_K_price
 sample_K_price=[]
 for i in range(0,1427):
     priceTmp=K_priceInfo.ix[i]
@@ -185,11 +185,11 @@ for i in range(0,1427):
     vol=priceTmp['K_price_Volatility']
     S0=priceTmp['K_price']
     price=StockPrice(n,drift,vol,S0)
-    sampleK_price.append(price)
-len(sampleK_price)
+    sample_K_price.append(price)
+len(sample_K_price)
 
 
-del sample_U_price
+#del sample_U_price
 sample_U_price=[]
 for i in range(0,1427):
     priceTmp=U_priceInfo.ix[i]
@@ -200,6 +200,24 @@ for i in range(0,1427):
     price=StockPrice(n,drift,vol,S0)
     sample_U_price.append(price)
 len(sample_U_price)
+
+samU=[]
+for i in range(0,len(sample_U_price)) :
+    for j in range(0,len(sample_U_price[i])) :
+        samU.append(sample_U_price[i][j])
+        print('i:',i,'j:',j)
+  
+    
+    
+samK=[]
+for i in range(0,len(sample_K_price)) :
+    for j in range(0,len(sample_K_price[i])) :
+        samK.append(sample_K_price[i][j])
+        print('i:',i,'j:',j) 
+    
+
+
+sample_U_price=pd.DataFrame(samU)
 
 pd.DataFrame(sample_K_price).to_csv("data/sample_K_price.csv")
 pd.DataFrame(sample_U_price).to_csv("data/sample_U_price.csv")

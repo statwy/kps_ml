@@ -7,8 +7,6 @@ import time
 from bs4 import BeautifulSoup
 from function.mail_func import exchange, premiumFunc, mail
 #from hdfs import InsecureClient
-
-  
 def crawling(x='bithumb',y='poloniex') :
     url={'bithumb':"https://api.bithumb.com/public/ticker/BTC",
          'coinone':"https://api.coinone.co.kr/ticker/?currency=btc&format=json",

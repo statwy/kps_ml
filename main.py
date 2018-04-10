@@ -31,14 +31,12 @@ def setup_percentFlag(x,y,z) :
 
 j=0
 premium=[]
-for j in range(0,10) : 
+for j in range(0,500) : 
     premium.append(crawling('bithumb','poloniex'))
     j+=1
-upper_bound,lower_bound=bollingerband(premium,10,3)
-
+upper_bound,lower_bound=bollingerband(premium,500,3)
 
 print('##### 메일 보내는 로직 시작 #####')
-# 메일 보내는 로직 (mail 함수 제목 주는거 고쳐야함)
 i=0
 j=0
 m=0
@@ -48,15 +46,13 @@ time_exchange_data={'timestamp':[],'exchange_rate':[]}
 time_premiumdata={'timestamp':[],'premium':[]}
 start_time_m=datetime.datetime.now()
 start_time_h=datetime.datetime.now()
-
 start_time_min=datetime.datetime.now()
-
 while True :
     try :
-        time.sleep(3)
+        time.sleep(10)
         i+=1    
         premium=append_maxsize(premium,crawling('bithumb','poloniex'),5000)
-        upper_bound,lower_bound=bollingerband(premium,10,5)
+        upper_bound,lower_bound=bollingerband(premium,500,3)
         
         if not lower_bound[-1] < crawling('bithumb','poloniex') < upper_bound[-1]:
             percent_flag['Boll']=1
@@ -74,7 +70,7 @@ while True :
         
         #print("percent_flag 값:",percent_flag)
         time_for_logic_min=datetime.datetime.now()-start_time_min
-        if time_for_logic_min.total_seconds()>4 :
+        if time_for_logic_min.total_seconds()>300 :
             time_premiumdata['timestamp'].append(int(time.time()))
             print(int(time.time()))
             time_premiumdata['premium'].append(premium[-1]*100)
