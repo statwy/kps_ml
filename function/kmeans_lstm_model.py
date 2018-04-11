@@ -15,31 +15,18 @@ from function.insert_bitpred import insertpremium2
 
 def Kmeans_LSTM(data) :
     
-#    data=pd.read_csv("data/data_refined.csv")
-#    data.index=data['5min_0']
-#    data=data.loc['2015-03-30 18:20:00' : ]
+
     data=pd.DataFrame(data)
     ft = getClosePattern(data, n=140)
     
-    #Pattern 몇 개를 확인해 본다
-    #x = np.arange(100)
-    #plt.plot(x, ft.iloc[0])
-    #plt.plot(x, ft.iloc[10])
-    #plt.plot(x, ft.iloc[50])
-    #plt.show()
-    #print(ft.head())
-    # K-means 알고리즘으로 Pattern 데이터를 8 그룹으로 분류한다 (k = 8)
+
     k = 6
     km = KMeans(n_clusters=k, init='random', n_init=10, max_iter=500, tol=1e-04, random_state=0)
     km = km.fit(ft)
     y_km = km.predict(ft)
     ft['cluster'] = y_km
     
-    #ft.to_csv("data/kmeansdata.csv")
-    
-    
-    # Centroid pattern을 그린다
-   
+
     
     fig = plt.figure(figsize=(10, 6))
     
@@ -65,7 +52,7 @@ def Kmeans_LSTM(data) :
     trainX, testX, trainY, testY = train_test_split(X, Y, test_size = 0.2, random_state=None)
     
     
-    # RNN 모델 빌드 및 fitting
+
     model = Sequential()
     model.add(LSTM(256, input_shape=(nPrior,k)))
     model.add(Dense(one_hot_vec_size, activation='softmax'))
@@ -83,30 +70,17 @@ def Kmeans_LSTM(data) :
     print("* 시험용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
     
     
-#    model.save("data/model.h5")
-#    a=model.get_weights("data/model.h5")
-    
-    
-    #test=pd.read_csv("data/test.csv") # 
     
     test=get_premium(400)
     test=pd.DataFrame(test)
     test=test.sort_index(ascending=False)
     test_cluster=getClosePattern(test,n=140)
     y_t=km.predict(test_cluster) 
-    
-    #ansx,ansy = TrainDataSet(y_t, nPrior)
-    #ttx=to_categorical(ansx)
-    #dY =model.predict(ttx)
-    #y_pr=[np.argmax(y, axis=None, out=None) for y in dY ]
-    #y_pr=np.array(y_pr)
-    
+
+
     a=realDataSet(y_t, nPrior)
     
-    #a=list(a)
-    #b=[]
-    #b.append(a)
-    
+
     
     ttx=to_categorical(a)
     dY =model.predict(ttx)
