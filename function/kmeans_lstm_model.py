@@ -19,6 +19,7 @@ def Kmeans_LSTM(data) :
     data=pd.DataFrame(data)
     ft = getClosePattern(data, n=140)
     
+
     print("kmeans시작")
 
     k = 6
@@ -47,7 +48,7 @@ def Kmeans_LSTM(data) :
     model.add(LSTM(256, input_shape=(nPrior,k)))
     model.add(Dense(one_hot_vec_size, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
-    history = model.fit(trainX, trainY, batch_size=1, epochs =10)
+    history = model.fit(trainX, trainY, batch_size=5, epochs =10)
     
     print("3")
     
