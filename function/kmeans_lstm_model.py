@@ -89,8 +89,7 @@ def Kmeans_LSTM(data) :
     mu=list(test['premium'])[-1]-km.cluster_centers_[y_pr[-1],:][0]*sigma
     pred=km.cluster_centers_[y_pr[-1],:]*sigma+mu
     pred=pd.DataFrame(pred)
-    plt.plot(pred[0])
-    
+
     print("7")
     
     last_timestamp=list(test['timestamp'])[-1]
