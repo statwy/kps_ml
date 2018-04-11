@@ -19,6 +19,7 @@ def Kmeans_LSTM(data) :
     data=pd.DataFrame(data)
     ft = getClosePattern(data, n=140)
     
+    print
 
     k = 6
     km = KMeans(n_clusters=k, init='random', n_init=10, max_iter=500, tol=1e-04, random_state=0)
@@ -26,22 +27,11 @@ def Kmeans_LSTM(data) :
     y_km = km.predict(ft)
     ft['cluster'] = y_km
     
-
     
-    fig = plt.figure(figsize=(10, 6))
-    
-    for i in range(k):
-        s = 'pattern-' + str(i)
-        p = fig.add_subplot(2,3,i+1)
-        p.plot(km.cluster_centers_[i,:], color="rbgkmrbgkm"[i])
-        p.set_title('Cluster-' + str(i))
-     
-    plt.tight_layout()
-    plt.show()
-     
     
 
-    
+
+    print("1")
     nPrior =5
     data=ft['cluster'].values
     X, Y = TrainDataSet(data, nPrior)
@@ -51,7 +41,7 @@ def Kmeans_LSTM(data) :
     one_hot_vec_size=Y.shape[1]
     trainX, testX, trainY, testY = train_test_split(X, Y, test_size = 0.2, random_state=None)
     
-    
+    print("2")
 
     model = Sequential()
     model.add(LSTM(256, input_shape=(nPrior,k)))
@@ -59,6 +49,7 @@ def Kmeans_LSTM(data) :
     model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
     history = model.fit(trainX, trainY, batch_size=10, epochs =100)
     
+    print("3")
     
     predY = model.predict(testX)
     y_pr=[np.argmax(y, axis=None, out=None) for y in predY ]
@@ -76,15 +67,20 @@ def Kmeans_LSTM(data) :
     test=test.sort_index(ascending=False)
     test_cluster=getClosePattern(test,n=140)
     y_t=km.predict(test_cluster) 
+    
+    print("4")
 
 
     a=realDataSet(y_t, nPrior)
     
+    print("1")
 
     
     ttx=to_categorical(a)
     dY =model.predict(ttx)
     y_pr=[np.argmax(y, axis=None, out=None) for y in dY ]
+    
+    print("6")
     
     y_pr[-1]
     
@@ -94,12 +90,13 @@ def Kmeans_LSTM(data) :
     pred=pd.DataFrame(pred)
     plt.plot(pred[0])
     
-    
+    print("7")
     
     last_timestamp=list(test['timestamp'])[-1]
     timestamp=list(map(int,timestamp_gener(100,last_timestamp)))
     premium=list(map(float,list(pred[0])))
     insertdata={'timestamp':timestamp,'premium':premium}
     
+    print("8")
     insertpremium2(insertdata)
 
