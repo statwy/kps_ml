@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from keras.layers import LSTM
 from function.ML import getClosePattern, realDataSet, TrainDataSet, timestamp_gener
 from function.get_premium import get_premium
-from function.insert_bitpred import insertpremium
+from function.insert_bitpred import insertpremium2
 
 def Kmeans_LSTM(data) :
     
@@ -127,5 +127,5 @@ def Kmeans_LSTM(data) :
     premium=list(map(float,list(pred[0])))
     insertdata={'timestamp':timestamp,'premium':premium}
     
-    insertpremium(insertdata)
+    insertpremium2(insertdata)
 

@@ -45,7 +45,7 @@ def truncate() :
 #    conn.close()
 
 
-def insertpremium(df) :
+def insertpremium2(df) :
     
     # MySQL Connection 연결
     conn = pymysql.connect(host='45.119.144.83 ', user='rabbit1', password='rabbit1',db='kps', charset='utf8')
