@@ -32,7 +32,7 @@ def setup_percentFlag(x,y,z) :
 j=0
 premium=[]
 for j in range(0,500) : 
-    premium.append(crawling('bithumb','poloniex'))
+    premium.append(crawling('bithumb','bitfinex'))
     j+=1
 upper_bound,lower_bound=bollingerband(premium,500,4)
 
@@ -51,10 +51,10 @@ while True :
     try :
         time.sleep(10)
         i+=1    
-        premium=append_maxsize(premium,crawling('bithumb','poloniex'),5000)
+        premium=append_maxsize(premium,crawling('bithumb','bitfinex'),5000)
         upper_bound,lower_bound=bollingerband(premium,500,4)
         
-        if not lower_bound[-1] < crawling('bithumb','poloniex') < upper_bound[-1]:
+        if not lower_bound[-1] < crawling('bithumb','bitfinex') < upper_bound[-1]:
             percent_flag['Boll']=1
                     
         if not math.floor(premium[-2]*100)==math.floor(premium[-1]*100) :

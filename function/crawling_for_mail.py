@@ -44,10 +44,13 @@ def crawling(x='bithumb',y='poloniex') :
             except :            
                 print("외국 거래소 사이트에서 가격정보를 가져오는데 실패하였습니다.",z)
             
-            try :    
-                u_flag=pd.DataFrame(data_U).empty
+            try :
+                if y=='bitfinex' :
+                    u_flag=(data_U['high']=='')
+                else :
+                    u_flag=pd.DataFrame(data_U).empty
             except :
-                print("k_flag error")
+                print("u_flag error")
             if not u_flag :
                 break
              

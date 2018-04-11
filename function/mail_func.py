@@ -26,7 +26,7 @@ def exchange():
 def premiumFunc(a,b) :
     a=float(a)
     b=float(b)
-    c=(a-b*exchange())/(b*exchange())
+    c=(a-b*exchange())/a
     return c
 
 

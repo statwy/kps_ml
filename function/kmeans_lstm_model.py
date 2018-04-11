@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, SimpleRNN
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
@@ -15,10 +15,10 @@ from function.insert_bitpred import insertpremium
 
 def Kmeans_LSTM(data) :
     
-    #data=pd.read_csv("data/data_refined.csv")
+    data=pd.read_csv("data/data_refined.csv")
     data.index=data['5min_0']
     data=data.loc['2015-03-30 18:20:00' : ]
-    ft = getClosePattern(data, n=100)
+    ft = getClosePattern(data, n=140)
     
     #Pattern 몇 개를 확인해 본다
     #x = np.arange(100)
@@ -38,17 +38,19 @@ def Kmeans_LSTM(data) :
     
     
     # Centroid pattern을 그린다
-    #fig = plt.figure(figsize=(10, 6))
-    #
-    #for i in range(k):
-    #    s = 'pattern-' + str(i)
-    #    p = fig.add_subplot(2,4,i+1)
-    #    p.plot(km.cluster_centers_[i,:], color="rbgkmrbgkm"[i])
-    #    p.set_title('Cluster-' + str(i))
-    # 
-    #plt.tight_layout()
-    #plt.show()
-    # 
+   
+    
+    fig = plt.figure(figsize=(10, 6))
+    
+    for i in range(k):
+        s = 'pattern-' + str(i)
+        p = fig.add_subplot(2,3,i+1)
+        p.plot(km.cluster_centers_[i,:], color="rbgkmrbgkm"[i])
+        p.set_title('Cluster-' + str(i))
+     
+    plt.tight_layout()
+    plt.show()
+     
     
     
     
@@ -81,10 +83,10 @@ def Kmeans_LSTM(data) :
     
     # RNN 모델 빌드 및 fitting
     model = Sequential()
-    model.add(LSTM(128, input_shape=(nPrior,k)))
+    model.add(LSTM(256, input_shape=(nPrior,k)))
     model.add(Dense(one_hot_vec_size, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
-    history = model.fit(trainX, trainY, batch_size=10, epochs =200)
+    history = model.fit(trainX, trainY, batch_size=10, epochs =100)
     
     
     predY = model.predict(testX)
@@ -96,12 +98,17 @@ def Kmeans_LSTM(data) :
     print()
     print("* 시험용 데이터로 측정한 정확도 = %.2f" % accuracy, '%')
     
+    
+#    model.save("data/model.h5")
+#    a=model.get_weights("data/model.h5")
+    
+    
     #test=pd.read_csv("data/test.csv") # 
     
     test=get_premium(400)
     test=pd.DataFrame(test)
     test=test.sort_index(ascending=False)
-    test_cluster=getClosePattern(test,n=100)
+    test_cluster=getClosePattern(test,n=140)
     y_t=km.predict(test_cluster) 
     
     #ansx,ansy = TrainDataSet(y_t, nPrior)
@@ -123,7 +130,7 @@ def Kmeans_LSTM(data) :
     
     y_pr[-1]
     
-    sigma=test['premium'][-100:].std() # 마지막 100개
+    sigma=test['premium'][-140:].std() # 마지막 100개
     mu=list(test['premium'])[-1]-km.cluster_centers_[y_pr[-1],:][0]*sigma
     pred=km.cluster_centers_[y_pr[-1],:]*sigma+mu
     pred=pd.DataFrame(pred)

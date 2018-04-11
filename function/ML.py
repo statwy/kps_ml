@@ -14,7 +14,7 @@ def realDataSet(data, prior=1):
 
 
 def getClosePattern(data, n):
-    loc = tuple(range(1, len(data) - n, 20))    
+    loc = tuple(range(1, len(data) - n, 10))    
     column = [str(e) for e in range(1, (n+1))]
     df = pd.DataFrame(columns=column)    
     for i in loc:       
