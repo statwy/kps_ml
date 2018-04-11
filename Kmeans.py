@@ -7,7 +7,7 @@ from keras.models import Sequential
 from keras.layers import Dense, SimpleRNN
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from keras.layers import LSTM
 
 print("kmeans 시작")
@@ -23,10 +23,26 @@ def getClosePattern(data, n):
 
     return df
 
+def TrainDataSet(data, prior=1):
+    x, y = [], []
+    for i in range(len(data)-prior):
+        a = data[i:(i+prior)]
+        x.append(a)
+        y.append(data[i + prior])
+   
+    trainX = np.array(x)
+    trainY = np.array(y)    
+    # RNN에 입력될 형식으로 변환한다. (데이터 개수, 1행 X prior 열)
+    #trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+
+    return trainX, trainY
+
+
+
 data=pd.read_csv("data/data_refined.csv")
 data.index=data['5min_0']
-data=data.loc['2015-03-30 18:20:00' : '2018-03-13 23:05:00']
-ft = getClosePattern(data, n=100)
+data=data.loc['2015-03-30 18:20:00' :]
+ft = getClosePattern(data, n=140)
 
  #Pattern 몇 개를 확인해 본다
 #x = np.arange(100)
@@ -44,6 +60,7 @@ y_km = km.predict(ft)
 ft['cluster'] = y_km
 print("kmeans 완료")
 
+#plt.plot(list(y_km))
 
 #########################################
 
@@ -55,24 +72,18 @@ print("kmeans 완료")
 
 #########################################
 
-
-
-
-
-#ft.to_csv("data/kmeansdata.csv")
-
 # Centroid pattern을 그린다
 
-#fig = plt.figure(figsize=(10, 6))
+fig = plt.figure(figsize=(10, 6))
 
-#for i in range(k):
-#    s = 'pattern-' + str(i)
-#    p = fig.add_subplot(2,4,i+1)
-#    p.plot(km.cluster_centers_[i,:], color="rbgkmrbgkm"[i])
-#    p.set_title('Cluster-' + str(i))
-# 
-#plt.tight_layout()
-#plt.show()
+for i in range(k):
+    s = 'pattern-' + str(i)
+    p = fig.add_subplot(2,4,i+1)
+    p.plot(km.cluster_centers_[i,:], color="rbgkmrbgkm"[i])
+    p.set_title('Cluster-' + str(i))
+ 
+plt.tight_layout()
+plt.show()
  
 # cluster = 0 인 패턴 몇 개만 그려본다
 #cluster = 0
@@ -111,22 +122,22 @@ print("kmeans 완료")
 #plt.legend()
 #plt.show()
 
-def TrainDataSet(data, prior=1):
-    x, y = [], []
-    for i in range(len(data)-prior):
-        a = data[i:(i+prior)]
-        x.append(a)
-        y.append(data[i + prior])
-   
-    trainX = np.array(x)
-    trainY = np.array(y)    
-    # RNN에 입력될 형식으로 변환한다. (데이터 개수, 1행 X prior 열)
-    #trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+#def TrainDataSet(data, prior=1):
+#    x, y = [], []
+#    for i in range(len(data)-prior):
+#        a = data[i:(i+prior)]
+#        x.append(a)
+#        y.append(data[i + prior])
+#   
+#    trainX = np.array(x)
+#    trainY = np.array(y)    
+#    # RNN에 입력될 형식으로 변환한다. (데이터 개수, 1행 X prior 열)
+#    #trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+#
+#    return trainX, trainY
 
-    return trainX, trainY
 
-
-nPrior =5
+nPrior =10
 data=ft['cluster'].values
 
 X, Y = TrainDataSet(data, nPrior)
@@ -141,10 +152,10 @@ print("훈련시작")
 # RNN 모델 빌드 및 fitting
 model = Sequential()
 #model.add(LSTM(128, input_shape=(nPrior,k)))
-model.add(LSTM(128, input_shape=(nPrior,k)))
+model.add(LSTM(512, input_shape=(nPrior,k)))
 model.add(Dense(one_hot_vec_size, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
-history = model.fit(trainX, trainY, batch_size=1, epochs =20)
+history = model.fit(trainX, trainY, batch_size=10, epochs =100)
 
 
 predY = model.predict(testX)
