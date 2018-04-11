@@ -9,6 +9,7 @@ import pymysql
 import pandas as pd 
 import time
 from pandas import Series, DataFrame
+from function.kmeans_lstm_model import Kmeans_LSTM
 
 
 def get_premiumfromdb():
@@ -19,7 +20,7 @@ def get_premiumfromdb():
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()
     # SQL문 실행
-    sql= "select * from premium limit 5;"
+    sql= "select * from premium;"
     #sql = "select address from contact where member_no in (select member_no from alarm where percent="+predict_percent+" and type=1) and type=1 and certification=1"
     curs.execute(sql)
     
@@ -38,6 +39,5 @@ def get_premiumfromdb():
 
 
 data=get_premiumfromdb()
-print(data)  
-
-    
+print("dbinput")
+Kmeans_LSTM(data)

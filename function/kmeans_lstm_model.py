@@ -15,9 +15,10 @@ from function.insert_bitpred import insertpremium
 
 def Kmeans_LSTM(data) :
     
-    data=pd.read_csv("data/data_refined.csv")
-    data.index=data['5min_0']
-    data=data.loc['2015-03-30 18:20:00' : ]
+#    data=pd.read_csv("data/data_refined.csv")
+#    data.index=data['5min_0']
+#    data=data.loc['2015-03-30 18:20:00' : ]
+    data=pd.DataFrame(data)
     ft = getClosePattern(data, n=140)
     
     #Pattern 몇 개를 확인해 본다
@@ -52,24 +53,7 @@ def Kmeans_LSTM(data) :
     plt.show()
      
     
-    
-    
-    
-    ## cluster = 0 인 패턴 몇 개만 그려본다
-    #cluster = 0
-    #plt.figure(figsize=(8, 5))
-    #p = ft.loc[ft['cluster'] == cluster]
-    #for i in range(7):
-    #    plt.plot(x,p.iloc[i][0:100])
-    #   
-    #plt.title('Cluster-' + str(cluster))
-    #plt.show()
-    #
-    #plt.hist(ft['cluster'])
-    #plt.show()
-    
-    ##################################################################################################
-    ##################################################################################################
+
     
     nPrior =5
     data=ft['cluster'].values
@@ -144,5 +128,4 @@ def Kmeans_LSTM(data) :
     insertdata={'timestamp':timestamp,'premium':premium}
     
     insertpremium(insertdata)
-
 
