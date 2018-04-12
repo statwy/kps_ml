@@ -41,3 +41,4 @@ def get_premiumfromdb():
 data=get_premiumfromdb()
 print("dbinput")
 Kmeans_LSTM(data)
+print("main끝")

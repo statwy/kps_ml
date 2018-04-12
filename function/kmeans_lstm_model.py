@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from keras.layers import LSTM
 from function.ML import getClosePattern, realDataSet, TrainDataSet, timestamp_gener
 from function.get_premium import get_premium
-from function.insert_bitpred import insertpremium2
+from function.insert_bitpred import insertpremium2,truncate
 
 def Kmeans_LSTM(data) :
     
@@ -97,5 +97,8 @@ def Kmeans_LSTM(data) :
     insertdata={'timestamp':timestamp,'premium':premium}
     
     print("8")
+    truncate()
+    print("9")
     insertpremium2(insertdata)
+    print("10")
 
