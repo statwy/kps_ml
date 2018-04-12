@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from keras.layers import LSTM
 from function.ML import getClosePattern, realDataSet, TrainDataSet, timestamp_gener
 from function.get_premium import get_premium
-from function.insert_bitpred import insertpremium2,truncate
+from function.insert_bitpred import insertpremium2, truncate
 
 def Kmeans_LSTM(data) :
     
@@ -47,7 +47,8 @@ def Kmeans_LSTM(data) :
     model.add(LSTM(256, input_shape=(nPrior,k)))
     model.add(Dense(one_hot_vec_size, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
-    history = model.fit(trainX, trainY, batch_size=1, epochs =10)
+    history = model.fit(trainX, trainY, batch_size=10, epochs =100)
+    
     
     print("3")
     

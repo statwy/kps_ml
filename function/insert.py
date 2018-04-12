@@ -12,7 +12,7 @@ import pymysql
 def insertpremium(time_premiumdata) :
     
     # MySQL Connection 연결
-    conn = pymysql.connect(host='10.1.43.149', user='rabbit', password='rabbit',db='kps', charset='utf8')
+    conn = pymysql.connect(host='127.0.0.1', user='rabbit', password='rabbit',db='kpsml', charset='utf8')
      
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()

@@ -11,6 +11,7 @@ def get_premium(days) :
     
     days=str(days)
     # MySQL Connection 연결
+    
     conn = pymysql.connect(host='127.0.0.1', user='rabbit', password='rabbit',db='kpsml', charset='utf8')
      
     # Connection 으로부터 Cursor 생성
