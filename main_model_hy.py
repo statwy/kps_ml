@@ -37,8 +37,13 @@ def get_premiumfromdb():
     conn.close()
     return df
 
-
-data=get_premiumfromdb()
-print("dbinput")
-Kmeans_LSTM(data)
-print("main끝")
+while True :
+    try :
+        time.sleep(5000)
+        data=get_premiumfromdb()
+        print("dbinput")
+        Kmeans_LSTM(data)
+        print("main끝")
+        
+    except :
+        print("machine learning error")
