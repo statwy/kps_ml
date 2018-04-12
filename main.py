@@ -32,6 +32,7 @@ def setup_percentFlag(x,y,z) :
 j=0
 premium=[]
 for j in range(0,500) : 
+    time.sleep(10)
     premium.append(crawling('bithumb','bitfinex'))
     j+=1
 upper_bound,lower_bound=bollingerband(premium,500,4)
