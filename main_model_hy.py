@@ -15,7 +15,7 @@ from function.kmeans_lstm_model import Kmeans_LSTM
 def get_premiumfromdb():
    
     # MySQL Connection 연결
-    conn = pymysql.connect(host='127.0.0.1', user='rabbit', password='rabbit',db='kpsml', charset='utf8')
+    conn = pymysql.connect(host='35.187.205.146', user='rabbit', password='rabbit',db='kpsml', charset='utf8')
      
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()
