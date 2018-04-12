@@ -31,11 +31,11 @@ def setup_percentFlag(x,y,z) :
 
 j=0
 premium=[]
-for j in range(0,500) : 
+for j in range(0,50) : 
     time.sleep(10)
     premium.append(crawling('bithumb','bitfinex'))
     j+=1
-upper_bound,lower_bound=bollingerband(premium,500,4)
+upper_bound,lower_bound=bollingerband(premium,50,4)
 
 print('##### 메일 보내는 로직 시작 #####')
 i=0
@@ -53,7 +53,7 @@ while True :
         time.sleep(10)
         i+=1    
         premium=append_maxsize(premium,crawling('bithumb','bitfinex'),5000)
-        upper_bound,lower_bound=bollingerband(premium,500,4)
+        upper_bound,lower_bound=bollingerband(premium,50,4)
         
         if not lower_bound[-1] < crawling('bithumb','bitfinex') < upper_bound[-1]:
             percent_flag['Boll']=1
