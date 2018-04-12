@@ -93,7 +93,7 @@ def Kmeans_LSTM(data) :
     print("7")
     
     last_timestamp=list(test['timestamp'])[-1]
-    timestamp=list(map(int,timestamp_gener(100,last_timestamp)))
+    timestamp=list(map(int,timestamp_gener(140,last_timestamp)))
     premium=list(map(float,list(pred[0])))
     insertdata={'timestamp':timestamp,'premium':premium}
     
