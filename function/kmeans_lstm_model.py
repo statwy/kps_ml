@@ -78,7 +78,9 @@ def Kmeans_LSTM(data) :
 
     
     ttx=to_categorical(a)
+    print("오류의심1")
     dY =model.predict(ttx)
+    print("오류의심2")
     y_pr=[np.argmax(y, axis=None, out=None) for y in dY ]
     
     print("6")
@@ -102,4 +104,3 @@ def Kmeans_LSTM(data) :
     print("9")
     insertpremium2(insertdata)
     print("10")
-
