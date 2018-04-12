@@ -39,11 +39,11 @@ def get_premiumfromdb():
 
 while True :
     try :
-        time.sleep(5000)
+        
         data=get_premiumfromdb()
         print("dbinput")
         Kmeans_LSTM(data)
         print("main끝")
-        
+        time.sleep(3600)
     except :
         print("machine learning error")
