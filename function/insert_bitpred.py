@@ -10,7 +10,7 @@ import pymysql
 def truncate() :
     # MySQL Connection 연결
     print("bitpred지우기 시작")
-    conn = pymysql.connect(host='45.119.144.83 ', user='rabbit1', password='rabbit1',db='kps', charset='utf8')    
+    conn = pymysql.connect(host='네이버', user='', password='',db='kps', charset='utf8')    
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()    
     sql="truncate table bitpred"
@@ -21,7 +21,7 @@ def truncate() :
 def insertpremium2(df) :
     
     # MySQL Connection 연결
-    conn = pymysql.connect(host='45.119.144.83 ', user='rabbit1', password='rabbit1',db='kps', charset='utf8')
+    conn = pymysql.connect(host='네이버', user='', password='',db='kps', charset='utf8')
      
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()
