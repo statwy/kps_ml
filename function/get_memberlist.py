@@ -11,7 +11,8 @@ def get_memberlist(predict_percent) :
     
     predict_percent=str(predict_percent)
     # MySQL Connection 연결
-    conn = pymysql.connect(host='네이버서버', user='', password='',db='', charset='utf8')    
+    conn = pymysql.connect(host='45.119.144.83', user='rabbit1', password='foqlt123!',db='kps', charset='utf8')    
+ 
      
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()
